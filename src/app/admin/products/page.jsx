@@ -1,0 +1,54 @@
+"use client";
+
+import { EntityManager } from "@/components/admin/entity-manager";
+import { categories } from "@/data/categories";
+import { formatPrice } from "@/lib/utils";
+
+const catSlugs = categories.map((c) => c.slug);
+
+export default function AdminProducts() {
+  return (
+    <EntityManager
+      entity="products"
+      title="Products"
+      singular="Product"
+      description="Manage your furniture catalogue — add, edit and remove products."
+      columns={[
+      {
+        key: "image",
+        label: "Image",
+        render: (r) => {
+          const src = r.images?.[0] ?? r.image;
+          return src ?
+          // eslint-disable-next-line @next/next/no-img-element
+          <img src={src} alt="" className="h-12 w-12 rounded-lg object-cover" /> :
+
+          <div className="h-12 w-12 rounded-lg bg-beige" />;
+
+        }
+      },
+      { key: "name", label: "Name" },
+      { key: "category", label: "Category" },
+      {
+        key: "price",
+        label: "Price",
+        render: (r) => Number(r.price) ? formatPrice(Number(r.price)) : "On Request"
+      },
+      { key: "rating", label: "Rating", render: (r) => `★ ${r.rating ?? "—"}` }]
+      }
+      fields={[
+      { name: "name", label: "Product Name", required: true },
+      { name: "category", label: "Category", type: "select", options: catSlugs, required: true },
+      { name: "price", label: "Price (₹)", type: "number" },
+      { name: "mrp", label: "MRP (₹)", type: "number" },
+      { name: "rating", label: "Rating", type: "number" },
+      { name: "reviews", label: "Reviews", type: "number" },
+      { name: "warranty", label: "Warranty", placeholder: "5-Year Warranty" },
+      { name: "image", label: "Image URL", type: "image", full: true },
+      { name: "shortDescription", label: "Short Description", type: "textarea" },
+      { name: "description", label: "Full Description", type: "textarea" },
+      { name: "materials", label: "Materials (comma separated)", type: "tags", full: true },
+      { name: "badges", label: "Badges (comma separated)", type: "tags", full: true }]
+      } />);
+
+}

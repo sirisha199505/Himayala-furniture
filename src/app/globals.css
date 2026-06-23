@@ -1,0 +1,205 @@
+@import "tailwindcss";
+
+/* ----------------------------------------------------------------------------
+   Himalayan Furniture Mart — Design Tokens (Tailwind v4 CSS-first config)
+   Brand palette: Burnt Orange / Terracotta / Warm Ivory
+---------------------------------------------------------------------------- */
+@theme {
+  /* Brand colors */
+  --color-brand: #c54a11; /* Burnt Orange — primary */
+  --color-brand-dark: #b7410e; /* Terracotta */
+  --color-brand-50: #fdf3ec;
+  --color-brand-100: #fbe3d3;
+  --color-brand-200: #f5c2a3;
+  --color-brand-300: #ee9b6e;
+  --color-brand-400: #e2703a;
+  --color-brand-500: #c54a11;
+  --color-brand-600: #b7410e;
+  --color-brand-700: #93340b;
+  --color-brand-800: #6f2708;
+  --color-brand-900: #4d1c06;
+
+  --color-ivory: #f8f5f0; /* Background — Warm Ivory */
+  --color-beige: #efe8dd; /* Surface — Soft Beige */
+  --color-charcoal: #1c1c1c; /* Text Primary */
+  --color-warmbrown: #3d3128; /* Text Secondary */
+  --color-walnut: #7a5c45; /* Accent — Walnut Brown */
+  --color-bronze: #b58a58; /* Premium Accent — Bronze Gold */
+
+  --color-background: #f8f5f0;
+  --color-surface: #ffffff;
+  --color-foreground: #1c1c1c;
+  --color-muted: #6b7280;
+  --color-success: #16a34a;
+  --color-border: #e7ddd0;
+
+  /* Named aliases (match design system token names) */
+  --color-primary: #c54a11;
+  --color-secondary: #b7410e;
+  --color-accent: #7a5c45;
+  --color-gold: #b58a58;
+  --color-text: #1c1c1c;
+
+  /* Typography */
+  --font-display: var(--font-playfair), Georgia, "Times New Roman", serif;
+  --font-editorial: var(--font-cormorant), var(--font-playfair), Georgia, serif;
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+
+  /* Radius */
+  --radius-xl: 1.25rem;
+  --radius-2xl: 1.75rem;
+
+  /* Shadows — soft, luxury elevation */
+  --shadow-soft: 0 2px 8px -2px rgb(28 28 28 / 0.06), 0 8px 24px -8px rgb(28 28 28 / 0.08);
+  --shadow-elevated: 0 12px 40px -12px rgb(28 28 28 / 0.18);
+
+  /* Animation easing */
+  --ease-luxury: cubic-bezier(0.22, 1, 0.36, 1);
+
+  /* Container */
+  --breakpoint-3xl: 120rem;
+}
+
+/* ----------------------------------------------------------------------------
+   Base layer
+---------------------------------------------------------------------------- */
+@layer base {
+  * {
+    border-color: var(--color-border);
+  }
+
+  html {
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  body {
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    font-family: var(--font-sans);
+    font-feature-settings: "ss01", "cv01";
+  }
+
+  h1, h2, h3, h4, h5 {
+    font-family: var(--font-display);
+    letter-spacing: -0.01em;
+    color: var(--color-charcoal);
+  }
+
+  ::selection {
+    background-color: var(--color-brand);
+    color: #fff;
+  }
+
+  /* Custom scrollbar */
+  ::-webkit-scrollbar { width: 10px; height: 10px; }
+  ::-webkit-scrollbar-track { background: var(--color-beige); }
+  ::-webkit-scrollbar-thumb {
+    background: var(--color-walnut);
+    border-radius: 9999px;
+    border: 2px solid var(--color-beige);
+  }
+  ::-webkit-scrollbar-thumb:hover { background: var(--color-brand); }
+
+  :focus-visible {
+    outline: 2px solid var(--color-brand);
+    outline-offset: 2px;
+  }
+}
+
+/* ----------------------------------------------------------------------------
+   Utilities & components
+---------------------------------------------------------------------------- */
+@layer utilities {
+  .text-balance { text-wrap: balance; }
+  .text-pretty { text-wrap: pretty; }
+
+  .font-editorial {
+    font-family: var(--font-editorial);
+  }
+
+  .eyebrow {
+    font-family: var(--font-sans);
+    text-transform: uppercase;
+    letter-spacing: 0.22em;
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: var(--color-brand);
+  }
+
+  .gradient-bronze {
+    background: linear-gradient(135deg, #d8a86d 0%, #b58a58 45%, #8a6a42 100%);
+  }
+
+  .gradient-overlay {
+    background: linear-gradient(180deg, rgba(28,28,28,0) 0%, rgba(28,28,28,0.05) 40%, rgba(28,28,28,0.72) 100%);
+  }
+
+  .hero-overlay {
+    background: linear-gradient(105deg, rgba(28,28,28,0.78) 0%, rgba(28,28,28,0.45) 45%, rgba(28,28,28,0.15) 100%);
+  }
+
+  /* Hide scrollbar for horizontal carousels */
+  .no-scrollbar::-webkit-scrollbar { display: none; }
+  .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+  .mask-fade-r {
+    -webkit-mask-image: linear-gradient(to right, #000 85%, transparent 100%);
+    mask-image: linear-gradient(to right, #000 85%, transparent 100%);
+  }
+}
+
+/* Marquee animation for trust bar */
+@keyframes marquee {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+.animate-marquee {
+  animation: marquee 32s linear infinite;
+}
+
+/* Ken Burns cinematic zoom for hero slides */
+@keyframes kenburns {
+  0% { transform: scale(1.04) translate(0, 0); }
+  100% { transform: scale(1.18) translate(-1.5%, -1%); }
+}
+.animate-kenburns {
+  animation: kenburns 7s var(--ease-luxury) forwards;
+}
+
+/* Subtle float */
+@keyframes floaty {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-12px); }
+}
+.animate-floaty { animation: floaty 6s var(--ease-luxury) infinite; }
+
+@keyframes shimmer {
+  100% { transform: translateX(100%); }
+}
+
+@keyframes accordion-down {
+  from { height: 0; opacity: 0; }
+  to { height: var(--radix-accordion-content-height); opacity: 1; }
+}
+@keyframes accordion-up {
+  from { height: var(--radix-accordion-content-height); opacity: 1; }
+  to { height: 0; opacity: 0; }
+}
+
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes fadeOut { from { opacity: 1; } to { opacity: 0; } }
+@keyframes popIn {
+  from { opacity: 0; transform: translate(-50%, -48%) scale(0.96); }
+  to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
