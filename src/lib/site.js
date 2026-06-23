@@ -19,12 +19,12 @@ export const SITE = {
   foundingYear: 2015,
   promises: ["High Quality", "Low Cost", "No Compromise"],
   address: {
-    street: "Showroom & Workshop",
+    street: "H, 490/25, opp. Hotel City Diamond, Huda Colony, Asif Nagar",
     locality: "Hyderabad",
     region: "Telangana",
-    postalCode: "500001",
+    postalCode: "500028",
     country: "IN",
-    full: "Hyderabad, Telangana, India"
+    full: "H, 490/25, opp. Hotel City Diamond, Huda Colony, Asif Nagar, Hyderabad, Telangana 500028"
   },
   geo: { lat: 17.385, lng: 78.4867 },
   hours: "Mon–Sun: 10:00 AM – 8:00 PM",

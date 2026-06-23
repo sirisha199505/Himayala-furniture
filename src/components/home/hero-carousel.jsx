@@ -92,7 +92,11 @@ export function HeroCarousel() {
               fill
               priority={index === 0}
               sizes="100vw"
-              className={reduce ? "object-cover" : "object-cover animate-kenburns"} />
+              className={
+                reduce ?
+                "object-cover object-[50%_35%]" :
+                "object-cover object-[50%_35%] animate-kenburns"
+              } />
             
           </div>
           {/* Left-to-right dark gradient overlay */}

@@ -27,7 +27,8 @@ export const metadata = pageMeta({
 const branches = [
 {
   city: "Hyderabad (Flagship)",
-  address: "Showroom & Workshop, Hyderabad, Telangana 500001",
+  address:
+  "H, 490/25, opp. Hotel City Diamond, Huda Colony, Asif Nagar, Hyderabad, Telangana 500028",
   phone: SITE.phoneDisplay
 },
 {
@@ -53,8 +54,8 @@ export default function ContactPage() {
       {/* Hero — full-bleed image with contact details overlaid (matches reference) */}
       <section className="relative min-h-[78vh] w-full overflow-hidden bg-charcoal">
         <Image
-          src={img(POOL.living[0], 2000)}
-          alt="Himalayan Furniture Mart interior"
+          src={img("1768393992748-8e58b9ab321d", 2000)}
+          alt="Light wood shelving"
           fill
           priority
           sizes="100vw"
@@ -111,10 +112,16 @@ export default function ContactPage() {
       </section>
 
 
-      <Container className="py-14">
-        <div className="grid grid-cols-1 gap-10 lg:grid-cols-12">
+      <Container className="py-12 sm:py-16">
+        <div className="grid grid-cols-1 gap-8 lg:grid-cols-12 lg:gap-10">
           {/* Contact info */}
           <div className="space-y-4 lg:col-span-5">
+            <div>
+              <p className="eyebrow mb-2">Reach Us</p>
+              <h2 className="font-display text-2xl font-semibold text-charcoal">
+                Talk to our team
+              </h2>
+            </div>
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <ContactCard
                 icon={<Phone size={22} />}
@@ -189,7 +196,7 @@ export default function ContactPage() {
         <div className="mt-12 overflow-hidden rounded-3xl border border-border">
           <iframe
             title="Himalayan Furniture Mart location"
-            src="https://www.google.com/maps?q=Hyderabad,Telangana,India&output=embed"
+            src="https://www.google.com/maps?q=Huda+Colony,Asif+Nagar,Hyderabad,Telangana+500028&output=embed"
             width="100%"
             height="420"
             loading="lazy"
@@ -212,19 +219,21 @@ function ContactCard({
 }) {
   const inner =
   <>
-      <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-brand-50 text-brand transition-colors group-hover:bg-brand group-hover:text-white">
+      <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-brand-50 text-brand transition-colors group-hover:bg-brand group-hover:text-white">
         {icon}
       </span>
-      <span>
-        <span className="block text-sm text-muted">{title}</span>
-        <span className="block break-all font-semibold text-charcoal">
+      <span className="min-w-0">
+        <span className="block text-xs font-medium uppercase tracking-wide text-muted">
+          {title}
+        </span>
+        <span className="block break-words font-semibold text-charcoal">
           {value}
         </span>
       </span>
     </>;
 
   const cls =
-  "group flex items-center gap-3 rounded-2xl border border-border bg-surface p-5 transition-all hover:border-brand/30 hover:shadow-soft";
+  "group flex items-center gap-3.5 rounded-2xl border border-border bg-surface p-5 transition-all hover:-translate-y-0.5 hover:border-brand/40 hover:shadow-soft";
   if (href)
   return (
     <a

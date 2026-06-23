@@ -48,7 +48,7 @@ export function Header() {
   if (pathname?.startsWith("/admin")) return null;
 
   return (
-    <div className="relative z-50">
+    <>
       {/* Announcement bar */}
       <div className="bg-brand-dark text-white">
         <div className="mx-auto flex max-w-[88rem] items-center justify-between gap-3 px-4 py-2 text-xs sm:px-8 lg:px-12">
@@ -229,7 +229,7 @@ export function Header() {
 
       {/* Mobile drawer */}
       <MobileDrawer open={mobileOpen} onClose={() => setMobileOpen(false)} />
-    </div>);
+    </>);
 
 }
 

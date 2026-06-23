@@ -161,8 +161,8 @@
 
 /* Ken Burns cinematic zoom for hero slides */
 @keyframes kenburns {
-  0% { transform: scale(1.04) translate(0, 0); }
-  100% { transform: scale(1.18) translate(-1.5%, -1%); }
+  0% { transform: scale(1.02) translate(0, 0); }
+  100% { transform: scale(1.08) translate(-1%, 0); }
 }
 .animate-kenburns {
   animation: kenburns 7s var(--ease-luxury) forwards;

@@ -44,13 +44,14 @@ export function ContactForm() {
   return (
     <form
       onSubmit={onSubmit}
-      className="rounded-3xl border border-border bg-surface p-6 sm:p-8">
-      
+      className="rounded-3xl border border-border bg-surface p-5 shadow-soft sm:p-8">
+
       <h2 className="font-display text-2xl font-semibold text-charcoal">
         Send us a message
       </h2>
-      <p className="mt-1 text-sm text-warmbrown/70">
-        Fill in the form and we'll be in touch shortly.
+      <p className="mt-1.5 text-sm text-warmbrown/70">
+        Fill in the form and we'll be in touch shortly — or reach us instantly on
+        WhatsApp.
       </p>
 
       <div className="mt-6 space-y-4">
@@ -72,7 +73,7 @@ export function ContactForm() {
           <select
             id="subject"
             name="subject"
-            className="w-full rounded-xl border border-border bg-ivory px-4 py-3 text-sm outline-none focus:border-brand">
+            className="w-full rounded-xl border border-border bg-ivory px-4 py-3 text-sm outline-none transition-all placeholder:text-muted/70 focus:border-brand focus:bg-surface focus:ring-2 focus:ring-brand/15">
             
             {subjects.map((s) =>
             <option key={s}>{s}</option>
@@ -89,7 +90,7 @@ export function ContactForm() {
             rows={4}
             required
             placeholder="Tell us how we can help…"
-            className="w-full rounded-xl border border-border bg-ivory px-4 py-3 text-sm outline-none focus:border-brand" />
+            className="w-full rounded-xl border border-border bg-ivory px-4 py-3 text-sm outline-none transition-all placeholder:text-muted/70 focus:border-brand focus:bg-surface focus:ring-2 focus:ring-brand/15" />
           
         </div>
         <Button
@@ -132,7 +133,7 @@ function Field({
         type={type}
         required={required}
         placeholder={placeholder}
-        className="w-full rounded-xl border border-border bg-ivory px-4 py-3 text-sm outline-none focus:border-brand" />
+        className="w-full rounded-xl border border-border bg-ivory px-4 py-3 text-sm outline-none transition-all placeholder:text-muted/70 focus:border-brand focus:bg-surface focus:ring-2 focus:ring-brand/15" />
       
     </div>);
 
