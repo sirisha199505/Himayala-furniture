@@ -1,4 +1,5 @@
 
+import Image from "next/image";
 import {
   Phone,
   Mail,
@@ -11,10 +12,10 @@ import {
 "lucide-react";
 import { SITE, telLink, whatsappLink } from "@/lib/site";
 import { Container } from "@/components/layout/container";
-import { PageHeader } from "@/components/layout/page-header";
 import { ContactForm } from "@/components/contact/contact-form";
 import { JsonLd } from "@/components/seo/json-ld";
 import { breadcrumbLd, pageMeta } from "@/lib/seo";
+import { img, POOL } from "@/data/images";
 
 export const metadata = pageMeta({
   title: "Contact Us",
