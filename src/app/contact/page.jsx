@@ -50,15 +50,66 @@ export default function ContactPage() {
         { name: "Contact", url: "/contact" }]
         )} />
       
-      <PageHeader
-        eyebrow="Get in Touch"
-        title="Let's craft your space"
-        description="Have a question or a project in mind? Reach out — our team is ready to help you find or build the perfect furniture."
-        crumbs={[
-        { name: "Home", href: "/" },
-        { name: "Contact", href: "/contact" }]
-        } />
-      
+      {/* Hero — full-bleed image with contact details overlaid (matches reference) */}
+      <section className="relative min-h-[78vh] w-full overflow-hidden bg-charcoal">
+        <Image
+          src={img(POOL.living[0], 2000)}
+          alt="Himalayan Furniture Mart interior"
+          fill
+          priority
+          sizes="100vw"
+          className="object-cover" />
+
+        <div
+          className="absolute inset-0"
+          style={{
+            background:
+            "linear-gradient(90deg, rgba(0,0,0,0.74) 0%, rgba(0,0,0,0.52) 45%, rgba(0,0,0,0.15) 100%)"
+          }} />
+
+        <Container className="relative z-10 flex min-h-[78vh] flex-col justify-center py-16 sm:py-20">
+          <div className="max-w-xl">
+            <h1 className="font-display text-4xl font-bold uppercase tracking-tight text-white sm:text-6xl lg:text-7xl">
+              Contact Us
+            </h1>
+            <p className="mt-5 max-w-lg text-pretty text-base leading-relaxed text-white/85 sm:mt-6 sm:text-lg">
+              Feel free to contact us with any questions or concerns. You can use
+              the form on our website or email us directly. We appreciate your
+              interest and look forward to hearing from you.
+            </p>
+
+            <dl className="mt-8 space-y-5">
+              <div>
+                <dt className="text-lg font-semibold text-white">Email</dt>
+                <dd>
+                  <a
+                    href={`mailto:${SITE.email}`}
+                    className="break-all text-white/85 transition-colors hover:text-brand">
+
+                    {SITE.email}
+                  </a>
+                </dd>
+              </div>
+              <div>
+                <dt className="text-lg font-semibold text-white">Phone</dt>
+                <dd>
+                  <a
+                    href={telLink()}
+                    className="text-white/85 transition-colors hover:text-brand">
+
+                    {SITE.phoneDisplay}
+                  </a>
+                </dd>
+              </div>
+              <div>
+                <dt className="text-lg font-semibold text-white">Address</dt>
+                <dd className="text-white/85">{SITE.address.full}</dd>
+              </div>
+            </dl>
+          </div>
+        </Container>
+      </section>
+
 
       <Container className="py-14">
         <div className="grid grid-cols-1 gap-10 lg:grid-cols-12">

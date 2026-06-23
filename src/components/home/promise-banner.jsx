@@ -17,7 +17,7 @@ export function PromiseBanner() {
       <div className="absolute inset-0 bg-charcoal/70" />
       <div className="absolute inset-0 bg-gradient-to-t from-charcoal/80 via-transparent to-charcoal/30" />
 
-      <div className="relative z-10 mx-auto max-w-4xl px-6 py-24 text-center">
+      <div className="relative z-10 mx-auto max-w-4xl px-5 py-16 text-center sm:px-6 sm:py-24">
         <Reveal>
           <p className="eyebrow mb-5 text-bronze">Crafted to Perfection</p>
         </Reveal>
