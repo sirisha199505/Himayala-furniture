@@ -9,7 +9,7 @@ import { img, POOL } from "@/data/images";
 import { Button } from "@/components/ui/button";
 
 const EASE = [0.22, 1, 0.36, 1];
-const INTERVAL = 5000;
+const INTERVAL = 3000;
 
 const slides = [
 {
