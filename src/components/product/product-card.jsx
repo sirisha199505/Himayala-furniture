@@ -3,7 +3,7 @@
 import * as React from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { Heart, GitCompareArrows, Eye } from "lucide-react";
+import { Heart, GitCompareArrows, Eye, ArrowRight } from "lucide-react";
 
 import { cn, formatPrice } from "@/lib/utils";
 import { Rating } from "@/components/ui/rating";
@@ -28,7 +28,7 @@ export function ProductCard({ product }) {
 
   return (
     <div className="group relative flex flex-col overflow-hidden rounded-2xl border border-border bg-surface transition-all duration-500 hover:-translate-y-1 hover:shadow-elevated">
-      <div className="relative aspect-[4/5] overflow-hidden bg-beige">
+      <div className="relative aspect-square overflow-hidden bg-beige sm:aspect-[4/5]">
         <Link href={`/products/${product.slug}`} aria-label={product.name}>
           {imgError ?
           <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-beige to-brand-50 p-4 text-center">
@@ -120,17 +120,26 @@ export function ProductCard({ product }) {
           }
         </div>
 
-        <div className="mt-4 grid grid-cols-1 gap-2 sm:grid-cols-2">
+        <div className="mt-4 flex gap-2">
           <EnquiryDialog
             productName={product.name}
             trigger={
-            <Button size="sm" className="w-full">
+            <Button size="sm" className="flex-1">
                 Enquire
               </Button>
             } />
 
-          <Button asChild size="sm" variant="outline" className="w-full">
-            <Link href={`/products/${product.slug}`}>Details</Link>
+          <Button
+            asChild
+            size="sm"
+            variant="outline"
+            aria-label={`View details for ${product.name}`}
+            className="shrink-0 px-3 sm:px-4">
+
+            <Link href={`/products/${product.slug}`}>
+              <span className="hidden sm:inline">Details</span>
+              <ArrowRight size={16} />
+            </Link>
           </Button>
         </div>
       </div>
