@@ -1,5 +1,6 @@
 "use client";
 
+import * as React from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Heart, GitCompareArrows, Eye } from "lucide-react";
@@ -15,6 +16,7 @@ import { useMounted } from "@/lib/use-mounted";
 
 export function ProductCard({ product }) {
   const mounted = useMounted();
+  const [imgError, setImgError] = React.useState(false);
   const wishlist = useWishlist();
   const compare = useCompare();
   const wished = mounted && wishlist.has(product.slug);
@@ -28,13 +30,21 @@ export function ProductCard({ product }) {
     <div className="group relative flex flex-col overflow-hidden rounded-2xl border border-border bg-surface transition-all duration-500 hover:-translate-y-1 hover:shadow-elevated">
       <div className="relative aspect-[4/5] overflow-hidden bg-beige">
         <Link href={`/products/${product.slug}`} aria-label={product.name}>
+          {imgError ?
+          <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-beige to-brand-50 p-4 text-center">
+              <span className="font-display text-sm font-semibold text-warmbrown/70">
+                {product.name}
+              </span>
+            </div> :
+
           <Image
             src={product.images[0]}
             alt={product.name}
             fill
             sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+            onError={() => setImgError(true)}
             className="object-cover transition-transform duration-[1.2s] ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-110" />
-          
+          }
         </Link>
 
         {/* Badges */}
@@ -110,16 +120,16 @@ export function ProductCard({ product }) {
           }
         </div>
 
-        <div className="mt-4 flex gap-2">
+        <div className="mt-4 grid grid-cols-1 gap-2 sm:grid-cols-2">
           <EnquiryDialog
             productName={product.name}
             trigger={
-            <Button size="sm" className="flex-1">
+            <Button size="sm" className="w-full">
                 Enquire
               </Button>
             } />
-          
-          <Button asChild size="sm" variant="outline" className="flex-1">
+
+          <Button asChild size="sm" variant="outline" className="w-full">
             <Link href={`/products/${product.slug}`}>Details</Link>
           </Button>
         </div>
