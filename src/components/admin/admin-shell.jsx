@@ -9,7 +9,7 @@ import {
   UserRound, BarChart3, Boxes, ExternalLink, ShieldAlert } from
 "lucide-react";
 import { cn } from "@/lib/utils";
-import { useAdminAuth, canAccess } from "@/store/admin-auth";
+import { useAdminAuth, canAccess, ROLE_LABELS } from "@/store/admin-auth";
 import { useMounted } from "@/lib/use-mounted";
 import { Logo } from "@/components/layout/logo";
 
@@ -100,7 +100,7 @@ export function AdminShell({ children }) {
               </span>
               <span className="hidden text-sm sm:block">
                 <span className="block font-medium leading-tight text-charcoal">{user.name.split(" ")[0]}</span>
-                <span className="block text-xs capitalize text-muted">{user.role === "super" ? "Super Admin" : "Content Manager"}</span>
+                <span className="block text-xs capitalize text-muted">{ROLE_LABELS[user.role] ?? "Admin"}</span>
               </span>
             </div>
           </div>

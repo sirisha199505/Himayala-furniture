@@ -21,9 +21,14 @@ export default function AdminLoginPage() {
     if (mounted && user) router.replace("/admin");
   }, [mounted, user, router]);
 
-  function onSubmit(e) {
+  const [submitting, setSubmitting] = React.useState(false);
+
+  async function onSubmit(e) {
     e.preventDefault();
-    const res = login(email, password);
+    setSubmitting(true);
+    setError("");
+    const res = await login(email, password);
+    setSubmitting(false);
     if (res.ok) router.replace("/admin");else
     setError(res.error ?? "Login failed");
   }
@@ -118,32 +123,32 @@ export default function AdminLoginPage() {
               </p>
             }
 
-            <Button type="submit" size="lg" className="w-full">
-              Sign In <ArrowRight size={18} />
+            <Button type="submit" size="lg" className="w-full" disabled={submitting}>
+              {submitting ? "Signing in…" : <>Sign In <ArrowRight size={18} /></>}
             </Button>
           </form>
 
-          {/* Demo accounts */}
+          {/* Quick sign-in */}
           <div className="mt-6 rounded-2xl border border-border bg-surface p-4">
             <p className="text-xs font-semibold uppercase tracking-wider text-muted">
-              Demo accounts
+              Quick sign-in
             </p>
             <div className="mt-3 flex flex-col gap-2">
+              {DEMO_ACCOUNTS.map((acc) =>
               <button
-                onClick={() => quickFill("super")}
+                key={acc.email}
+                type="button"
+                onClick={() => quickFill(acc.role)}
                 className="rounded-lg border border-border px-3 py-2 text-left text-sm hover:border-brand">
-                
-                <span className="font-medium text-charcoal">Super Admin</span>
-                <span className="block text-xs text-muted">admin@himalayanfurnituremart.in · admin123</span>
+
+                <span className="font-medium text-charcoal">{acc.name}</span>
+                <span className="block text-xs text-muted">{acc.email}</span>
               </button>
-              <button
-                onClick={() => quickFill("content")}
-                className="rounded-lg border border-border px-3 py-2 text-left text-sm hover:border-brand">
-                
-                <span className="font-medium text-charcoal">Content Manager</span>
-                <span className="block text-xs text-muted">content@himalayanfurnituremart.in · content123</span>
-              </button>
+              )}
             </div>
+            <p className="mt-3 text-xs text-muted">
+              Additional Admin users can be created under User Management.
+            </p>
           </div>
 
           <Link href="/" className="mt-6 block text-center text-sm text-muted hover:text-brand">

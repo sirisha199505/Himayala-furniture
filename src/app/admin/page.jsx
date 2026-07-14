@@ -1,5 +1,6 @@
 "use client";
 
+import * as React from "react";
 import Link from "next/link";
 import {
   Sofa, Images, Inbox, Newspaper, TrendingUp, IndianRupee,
@@ -11,16 +12,21 @@ import { useMounted } from "@/lib/use-mounted";
 
 export default function AdminDashboard() {
   const mounted = useMounted();
-  const { data } = useAdminData();
+  const { data, load } = useAdminData();
   const { user } = useAdminAuth();
+
+  React.useEffect(() => {
+    if (!mounted) return;
+    ["products", "gallery", "blogs", "leads"].forEach((e) => load(e));
+  }, [mounted, load]);
 
   if (!mounted) return null;
 
   const counts = {
-    products: data.products.length,
-    gallery: data.gallery.length,
-    blogs: data.blogs.length,
-    leads: data.leads.length
+    products: (data.products ?? []).length,
+    gallery: (data.gallery ?? []).length,
+    blogs: (data.blogs ?? []).length,
+    leads: (data.leads ?? []).length
   };
 
   const stats = [
@@ -35,7 +41,7 @@ export default function AdminDashboard() {
   { label: "Customers", value: "2,310", icon: Users, trend: "+5% MoM" },
   { label: "Conversion", value: "4.8%", icon: TrendingUp, trend: "+0.6pt" }];
 
-  const recentLeads = data.leads.slice(0, 5);
+  const recentLeads = (data.leads ?? []).slice(0, 5);
 
   return (
     <div className="space-y-8">

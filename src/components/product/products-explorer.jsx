@@ -6,6 +6,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { Search, SlidersHorizontal, X, ChevronDown, Frown } from "lucide-react";
 import { products, allMaterials, allColors, priceRange } from "@/data/products";
 import { categories } from "@/data/categories";
+import { collections, collectionCategories } from "@/data/collections";
 import { cn, formatPrice } from "@/lib/utils";
 import { ProductCard } from "@/components/product/product-card";
 import { Button } from "@/components/ui/button";
@@ -15,10 +16,14 @@ const PAGE_SIZE = 8;
 export function ProductsExplorer() {
   const params = useSearchParams();
   const initialCategory = params.get("category");
+  const initialCollection = params.get("collection");
 
   const [query, setQuery] = React.useState("");
   const [cats, setCats] = React.useState(
     initialCategory ? [initialCategory] : []
+  );
+  const [colls, setColls] = React.useState(
+    initialCollection ? [initialCollection] : []
   );
   const [mats, setMats] = React.useState([]);
   const [colors, setColors] = React.useState([]);
@@ -31,6 +36,10 @@ export function ProductsExplorer() {
     if (initialCategory) setCats([initialCategory]);
   }, [initialCategory]);
 
+  React.useEffect(() => {
+    if (initialCollection) setColls([initialCollection]);
+  }, [initialCollection]);
+
   const toggle =
   (setter) =>
   (val) =>
@@ -39,9 +48,13 @@ export function ProductsExplorer() {
   );
 
   const filtered = React.useMemo(() => {
+    const collCats = colls.length ?
+    new Set(colls.flatMap((slug) => collectionCategories[slug] ?? [])) :
+    null;
     let list = products.filter((p) => {
       if (query && !`${p.name} ${p.description}`.toLowerCase().includes(query.toLowerCase()))
       return false;
+      if (collCats && !collCats.has(p.category)) return false;
       if (cats.length && !cats.includes(p.category)) return false;
       if (mats.length && !p.materials.some((m) => mats.includes(m))) return false;
       if (colors.length && !p.colors.some((c) => colors.includes(c.name)))
@@ -68,13 +81,16 @@ export function ProductsExplorer() {
         );
     }
     return list;
-  }, [query, cats, mats, colors, maxPrice, sort]);
+  }, [query, colls, cats, mats, colors, maxPrice, sort]);
 
-  React.useEffect(() => setVisible(PAGE_SIZE), [query, cats, mats, colors, maxPrice, sort]);
+  React.useEffect(() => setVisible(PAGE_SIZE), [query, colls, cats, mats, colors, maxPrice, sort]);
 
-  const activeCount = cats.length + mats.length + colors.length + (maxPrice < priceRange.max ? 1 : 0);
+  const activeCount =
+  colls.length + cats.length + mats.length + colors.length + (
+  maxPrice < priceRange.max ? 1 : 0);
 
   const clearAll = () => {
+    setColls([]);
     setCats([]);
     setMats([]);
     setColors([]);
@@ -84,6 +100,17 @@ export function ProductsExplorer() {
 
   const Filters =
   <div className="space-y-7">
+      <FilterGroup title="Shop by Collection">
+        {collections.map((col) =>
+      <CheckRow
+        key={col.slug}
+        label={col.name}
+        checked={colls.includes(col.slug)}
+        onChange={() => toggle(setColls)(col.slug)} />
+
+      )}
+      </FilterGroup>
+
       <FilterGroup title="Category">
         {categories.map((c) =>
       <CheckRow

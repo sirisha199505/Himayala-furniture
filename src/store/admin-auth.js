@@ -2,50 +2,68 @@
 
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
+import { apiLogin } from "@/lib/api";
 
-// Demo accounts (front-end only — wire to real auth in production)
+// Backend role int -> frontend role key
+const ROLE_STR = { 1: "super", 2: "admin" };
+
+// Quick-fill helper for the login screen. These are real accounts that must
+// exist in the backend (seed with scripts/seed_admin.rb). Passwords are NOT
+// checked on the client anymore — the API validates them.
 export const DEMO_ACCOUNTS = [
 {
-  name: "Sirisha (Super Admin)",
+  name: "Super Admin",
   email: "admin@himalayanfurnituremart.in",
   password: "admin123",
   role: "super"
-},
-{
-  name: "Content Manager",
-  email: "content@himalayanfurnituremart.in",
-  password: "content123",
-  role: "content"
 }];
 
 export const useAdminAuth = create()(
   persist(
     (set) => ({
       user: null,
-      login: (email, password) => {
-        const match = DEMO_ACCOUNTS.find(
-          (a) => a.email.toLowerCase() === email.trim().toLowerCase() && a.password === password
-        );
-        if (!match) return { ok: false, error: "Invalid email or password." };
-        set({ user: { name: match.name, email: match.email, role: match.role } });
-        return { ok: true };
+      token: null,
+      login: async (email, password) => {
+        try {
+          const { token, info } = await apiLogin(email.trim(), password);
+          set({
+            token,
+            user: {
+              id: info.id,
+              name: info.full_name || info.name || info.email,
+              email: info.email,
+              role: ROLE_STR[info.role] ?? "admin"
+            }
+          });
+          return { ok: true };
+        } catch (e) {
+          return { ok: false, error: e?.message || "Invalid email or password." };
+        }
       },
-      logout: () => set({ user: null })
+      logout: () => set({ user: null, token: null })
     }),
     { name: "hfm-admin-auth" }
   )
 );
 
-// Modules available per role
-export const ROLE_MODULES = {
-  content: ["dashboard", "products", "categories", "gallery", "faqs", "blogs", "case-studies", "stories", "seo"],
-  super: [
-  "dashboard", "products", "categories", "gallery", "faqs", "blogs", "case-studies",
-  "stories", "seo", "leads", "orders", "customers", "analytics", "inventory", "users", "settings"]
+// Modules available per role.
+// Super Admin: everything. Admin: everything EXCEPT user management & settings.
+const ALL_MODULES = [
+"dashboard", "products", "categories", "gallery", "faqs", "blogs", "case-studies",
+"stories", "seo", "leads", "orders", "customers", "analytics", "inventory",
+"users", "settings"];
 
+export const ROLE_MODULES = {
+  super: ALL_MODULES,
+  admin: ALL_MODULES.filter((m) => m !== "users" && m !== "settings")
+};
+
+export const ROLE_LABELS = {
+  super: "Super Admin",
+  admin: "Admin"
 };
 
 export function canAccess(role, module) {
   if (!role) return false;
-  return ROLE_MODULES[role].includes(module);
+  return (ROLE_MODULES[role] ?? []).includes(module);
 }

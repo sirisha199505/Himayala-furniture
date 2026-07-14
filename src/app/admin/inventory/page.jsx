@@ -1,18 +1,25 @@
 "use client";
 
+import * as React from "react";
 import { useAdminData } from "@/store/admin-data";
 import { useMounted } from "@/lib/use-mounted";
-import { seededRandom } from "@/lib/utils";
 
 export default function AdminInventory() {
   const mounted = useMounted();
-  const { data } = useAdminData();
+  const { data, load, loading } = useAdminData();
+
+  React.useEffect(() => {
+    if (mounted) load("products");
+  }, [mounted, load]);
+
   if (!mounted) return null;
 
-  const rows = data.products.map((p) => {
-    const stock = p.inStock ? Math.floor(seededRandom(p.id) * 40) + 3 : 0;
-    const status = stock === 0 ? "Made to Order" : stock < 8 ? "Low Stock" : "In Stock";
-    return { id: p.id, name: String(p.name), category: String(p.category), stock, status };
+  const products = data.products ?? [];
+  const rows = products.map((p) => {
+    const stock = Number(p.stock ?? 0);
+    const status =
+    !p.inStock || stock === 0 ? "Made to Order" : stock < 8 ? "Low Stock" : "In Stock";
+    return { id: p.id, name: String(p.name), category: String(p.category ?? "—"), stock, status };
   });
 
   const color = {
@@ -51,6 +58,13 @@ export default function AdminInventory() {
                   </td>
                 </tr>
               )}
+              {rows.length === 0 &&
+              <tr>
+                  <td colSpan={4} className="px-5 py-12 text-center text-muted">
+                    {loading?.products ? "Loading…" : "No products yet."}
+                  </td>
+                </tr>
+              }
             </tbody>
           </table>
         </div>

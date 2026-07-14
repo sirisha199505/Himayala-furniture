@@ -46,3 +46,13 @@ export const collections = [
 
 export const collectionBySlug = (slug) =>
 collections.find((c) => c.slug === slug);
+
+// The product categories that make up each collection (shared by the
+// collection detail page and the shop's "Shop by Collection" filter).
+export const collectionCategories = {
+  "residential-homes": [
+  "sofas", "chairs", "tv-units", "beds", "wardrobes", "dining-sets", "storage-furniture"],
+  "office-furniture": ["office-furniture", "study-tables", "chairs", "storage-furniture"],
+  "premium-luxury": ["custom-furniture", "sofas", "beds", "wardrobes"],
+  hospitality: ["dining-sets", "chairs", "sofas", "storage-furniture"]
+};

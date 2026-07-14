@@ -21,12 +21,18 @@ export function EntityManager({
 
 }) {
   const mounted = useMounted();
-  const { data, add, update, remove, reset } = useAdminData();
+  const { data, add, update, remove, load, reset, loading, error } = useAdminData();
   const records = data[entity] ?? [];
+  const isLoading = loading?.[entity];
   const [query, setQuery] = React.useState("");
   const [editing, setEditing] = React.useState(null);
   const [creating, setCreating] = React.useState(false);
   const [confirmId, setConfirmId] = React.useState(null);
+  const [formError, setFormError] = React.useState("");
+
+  React.useEffect(() => {
+    if (mounted) load(entity);
+  }, [mounted, entity, load]);
 
   if (!mounted) return null;
 
@@ -46,13 +52,12 @@ export function EntityManager({
         </div>
         <div className="flex gap-2">
           <button
-            onClick={() => {
-              if (confirm("Reset all admin data to defaults? Your local edits will be lost.")) reset();
-            }}
-            className="flex items-center gap-1.5 rounded-full border border-border px-3 py-2 text-sm font-medium text-muted hover:border-brand hover:text-brand"
-            title="Reset to defaults">
-            
-            <RotateCcw size={15} /> Reset
+            onClick={() => reset(entity)}
+            className="flex items-center gap-1.5 rounded-full border border-border px-3 py-2 text-sm font-medium text-muted hover:border-brand hover:text-brand disabled:opacity-50"
+            disabled={isLoading}
+            title="Reload from server">
+
+            <RotateCcw size={15} className={isLoading ? "animate-spin" : ""} /> Refresh
           </button>
           <Button onClick={() => setCreating(true)}>
             <Plus size={18} /> Add {singular}
@@ -70,6 +75,13 @@ export function EntityManager({
           className="w-full rounded-full border border-border bg-surface py-2.5 pl-11 pr-4 text-sm outline-none focus:border-brand" />
         
       </div>
+
+      {/* Error banner */}
+      {error &&
+      <div className="rounded-xl border border-brand/30 bg-brand/5 px-4 py-3 text-sm text-brand">
+          {error}
+        </div>
+      }
 
       {/* Table */}
       <div className="overflow-hidden rounded-2xl border border-border bg-surface">
@@ -114,7 +126,7 @@ export function EntityManager({
               {filtered.length === 0 &&
               <tr>
                   <td colSpan={columns.length + 1} className="px-4 py-12 text-center text-muted">
-                    No {title.toLowerCase()} found.
+                    {isLoading ? "Loading…" : `No ${title.toLowerCase()} found.`}
                   </td>
                 </tr>
               }
@@ -125,7 +137,7 @@ export function EntityManager({
 
       <p className="text-xs text-muted">
         {filtered.length} {filtered.length === 1 ? singular.toLowerCase() : title.toLowerCase()} ·
-        Changes are saved to your browser (demo persistence).
+        Saved to the Himalayan Furniture Mart backend.
       </p>
 
       {/* Create / Edit dialog */}
@@ -134,15 +146,23 @@ export function EntityManager({
         onClose={() => {
           setCreating(false);
           setEditing(null);
+          setFormError("");
         }}
         fields={fields}
         singular={singular}
         initial={editing}
-        onSubmit={(values) => {
-          if (editing) update(entity, editing.id, values);else
-          add(entity, values);
-          setCreating(false);
-          setEditing(null);
+        error={formError}
+        onSubmit={async (values) => {
+          setFormError("");
+          const res = editing ?
+          await update(entity, editing.id, values) :
+          await add(entity, values);
+          if (res?.ok) {
+            setCreating(false);
+            setEditing(null);
+          } else {
+            setFormError(res?.error || "Something went wrong. Please try again.");
+          }
         }} />
       
 
@@ -151,7 +171,7 @@ export function EntityManager({
         <DialogContent className="max-w-sm">
           <DialogTitle className="text-xl font-semibold">Delete {singular}?</DialogTitle>
           <p className="mt-2 text-warmbrown/80">
-            This will remove the item from your local data. This cannot be undone.
+            This will permanently remove the item from the backend. This cannot be undone.
           </p>
           <div className="mt-5 flex gap-3">
             <Button variant="outline" className="flex-1" onClick={() => setConfirmId(null)}>
@@ -160,8 +180,8 @@ export function EntityManager({
             <Button
               variant="secondary"
               className="flex-1 !bg-brand hover:!bg-brand-dark"
-              onClick={() => {
-                if (confirmId) remove(entity, confirmId);
+              onClick={async () => {
+                if (confirmId) await remove(entity, confirmId);
                 setConfirmId(null);
               }}>
               
@@ -180,6 +200,7 @@ function EntityForm({
   fields,
   initial,
   singular,
+  error,
   onSubmit
 
 }) {
@@ -229,6 +250,11 @@ function EntityForm({
         <DialogTitle className="text-2xl font-semibold">
           {initial ? `Edit ${singular}` : `Add ${singular}`}
         </DialogTitle>
+        {error &&
+        <div className="mt-4 rounded-xl border border-brand/30 bg-brand/5 px-4 py-3 text-sm text-brand">
+            {error}
+          </div>
+        }
         <form onSubmit={submit} className="mt-5 grid grid-cols-1 gap-4 sm:grid-cols-2">
           {fields.map((f) =>
           <div key={f.name} className={f.full || f.type === "textarea" ? "sm:col-span-2" : ""}>

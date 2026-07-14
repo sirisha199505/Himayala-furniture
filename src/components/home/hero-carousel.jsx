@@ -5,7 +5,6 @@ import Image from "next/image";
 import Link from "next/link";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { ArrowRight, ChevronLeft, ChevronRight, Images } from "lucide-react";
-import { img, POOL } from "@/data/images";
 import { Button } from "@/components/ui/button";
 
 const EASE = [0.22, 1, 0.36, 1];
@@ -13,39 +12,40 @@ const INTERVAL = 3000;
 
 const slides = [
 {
-  image: img(POOL.living[0], 2000),
-  eyebrow: "Living Spaces",
-  heading: "Crafted To",
-  highlight: "Perfection",
-  sub: "Luxury furniture designed for modern living."
+  image: "/images/gallery/sofa.jpg",
+  eyebrow: "Residential Homes",
+  heading: "Crafted For",
+  highlight: "Beautiful Living",
+  sub: "Sofas, beds, wardrobes and more — furniture that turns a house into a home.",
+  href: "/collections/residential-homes",
+  object: "50% 55%"
 },
 {
-  image: img(POOL.beds[1], 2000),
-  eyebrow: "Bedroom Retreats",
-  heading: "Rest In",
-  highlight: "Quiet Luxury",
-  sub: "Serene bedrooms built for comfort that lasts a lifetime."
-},
-{
-  image: img(POOL.dining[0], 2000),
-  eyebrow: "Dining & Gathering",
-  heading: "Where Memories",
-  highlight: "Gather",
-  sub: "Solid-wood dining sets crafted for meals worth lingering over."
-},
-{
-  image: img(POOL.office[0], 2000),
-  eyebrow: "Workspaces",
+  image: "/images/gallery/workstation.jpg",
+  eyebrow: "Office Furniture",
   heading: "Work In",
   highlight: "Boardroom Style",
-  sub: "Executive furniture that brings polish to every workspace."
+  sub: "Executive desks, ergonomic chairs and workstations built for productive spaces.",
+  href: "/collections/office-furniture",
+  object: "50% 50%"
 },
 {
-  image: img(POOL.hero[1], 2000),
-  eyebrow: "Bespoke Interiors",
-  heading: "Designed Around",
-  highlight: "You",
-  sub: "Custom furniture built to your exact vision and space."
+  image: "/images/gallery/imported.jpg",
+  eyebrow: "Premium & Luxury",
+  heading: "Live In",
+  highlight: "Quiet Luxury",
+  sub: "Our finest imported and bespoke pieces in solid wood, marble and gold-accent finishes.",
+  href: "/collections/premium-luxury",
+  object: "50% 50%"
+},
+{
+  image: "/images/gallery/hotel.jpg",
+  eyebrow: "Hospitality Projects",
+  heading: "Spaces That",
+  highlight: "Welcome",
+  sub: "Durable, stylish furniture for restaurants, cafes, hotels and reception areas.",
+  href: "/collections/hospitality",
+  object: "50% 50%"
 }];
 
 export function HeroCarousel() {
@@ -85,19 +85,22 @@ export function HeroCarousel() {
           transition={{ duration: 1.2, ease: "easeInOut" }}
           className="absolute inset-0">
           
-          <div className="absolute inset-0 overflow-hidden">
+          <div className="absolute inset-0 overflow-hidden bg-charcoal">
+            {/* Full-bleed image covers the entire hero on every screen size */}
             <Image
               src={slide.image}
               alt={slide.eyebrow}
               fill
               priority={index === 0}
+              quality={90}
               sizes="100vw"
+              style={{ objectPosition: slide.object ?? "50% 50%" }}
               className={
                 reduce ?
-                "object-cover object-[50%_35%]" :
-                "object-cover object-[50%_35%] animate-kenburns"
+                "object-cover" :
+                "object-cover animate-kenburns"
               } />
-            
+
           </div>
           {/* Left-to-right dark gradient overlay */}
           <div
@@ -113,7 +116,7 @@ export function HeroCarousel() {
 
       {/* Content */}
       <div className="relative z-10 mx-auto flex h-full max-w-[88rem] flex-col justify-center px-5 sm:px-8 lg:px-12">
-        <div className="max-w-2xl">
+        <div className="w-full max-w-2xl">
           <AnimatePresence mode="wait">
             <motion.div key={index}>
               <motion.p
@@ -149,10 +152,10 @@ export function HeroCarousel() {
                 initial={{ opacity: 0, y: 24 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.9, ease: EASE, delay: 0.6 }}
-                className="mt-9 flex flex-wrap gap-4">
-                
-                <Button asChild size="lg">
-                  <Link href="/products">
+                className="mt-9 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:gap-4">
+
+                <Button asChild size="lg" className="w-full justify-center sm:w-auto">
+                  <Link href={slide.href}>
                     Explore Collection <ArrowRight size={18} />
                   </Link>
                 </Button>
@@ -160,7 +163,7 @@ export function HeroCarousel() {
                   asChild
                   size="lg"
                   variant="outline"
-                  className="border-white/40 text-white hover:border-white hover:bg-white hover:text-charcoal">
+                  className="w-full justify-center border-white/40 text-white hover:border-white hover:bg-white hover:text-charcoal sm:w-auto">
                   
                   <Link href="/gallery">
                     <Images size={18} /> View Gallery

@@ -1,22 +1,13 @@
 
 import { notFound } from "next/navigation";
 import Image from "next/image";
-import { collections, collectionBySlug } from "@/data/collections";
+import { collections, collectionBySlug, collectionCategories } from "@/data/collections";
 import { products } from "@/data/products";
 import { Container } from "@/components/layout/container";
 import { Breadcrumbs } from "@/components/layout/page-header";
 import { ProductCard } from "@/components/product/product-card";
 import { JsonLd } from "@/components/seo/json-ld";
 import { breadcrumbLd, pageMeta } from "@/lib/seo";
-
-// Map each collection to the product categories it contains
-const COLLECTION_CATEGORIES = {
-  "residential-homes": [
-  "sofas", "chairs", "tv-units", "beds", "wardrobes", "dining-sets", "storage-furniture"],
-  "office-furniture": ["office-furniture", "study-tables", "chairs", "storage-furniture"],
-  "premium-luxury": ["custom-furniture", "sofas", "beds", "wardrobes"],
-  hospitality: ["dining-sets", "chairs", "sofas", "storage-furniture"]
-};
 
 export function generateStaticParams() {
   return collections.map((c) => ({ slug: c.slug }));
@@ -45,7 +36,7 @@ export default async function CollectionPage({
   const col = collectionBySlug(slug);
   if (!col) notFound();
 
-  const cats = COLLECTION_CATEGORIES[col.slug] ?? [];
+  const cats = collectionCategories[col.slug] ?? [];
   const items = products.filter((p) => cats.includes(p.category));
 
   return (
