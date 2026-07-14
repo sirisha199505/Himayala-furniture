@@ -175,9 +175,6 @@ export function Footer() {
             <Link href="/faq" className="hover:text-white">
               Support
             </Link>
-            <Link href="/admin" className="hover:text-white">
-              Admin
-            </Link>
             <span>Crafted for beautiful living</span>
           </div>
         </div>
