@@ -10,7 +10,7 @@ import {
   Facebook,
   Youtube } from
 "lucide-react";
-import { SITE, telLink, whatsappLink } from "@/lib/site";
+import { getStoreConfig, telLink, whatsappLink } from "@/lib/store-config";
 import { Container } from "@/components/layout/container";
 import { ContactForm } from "@/components/contact/contact-form";
 import { JsonLd } from "@/components/seo/json-ld";
@@ -28,21 +28,19 @@ const branches = [
 {
   city: "Hyderabad (Flagship)",
   address:
-  "H, 490/25, opp. Hotel City Diamond, Huda Colony, Asif Nagar, Hyderabad, Telangana 500028",
-  phone: SITE.phoneDisplay
+  "H, 490/25, opp. Hotel City Diamond, Huda Colony, Asif Nagar, Hyderabad, Telangana 500028"
 },
 {
   city: "Bengaluru",
-  address: "Experience Centre, Bengaluru, Karnataka",
-  phone: SITE.phoneDisplay
+  address: "Experience Centre, Bengaluru, Karnataka"
 },
 {
   city: "Chennai",
-  address: "Experience Centre, Chennai, Tamil Nadu",
-  phone: SITE.phoneDisplay
+  address: "Experience Centre, Chennai, Tamil Nadu"
 }];
 
-export default function ContactPage() {
+export default async function ContactPage() {
+  const config = await getStoreConfig();
   return (
     <>
       <JsonLd
@@ -84,10 +82,10 @@ export default function ContactPage() {
                 <dt className="text-lg font-semibold text-white">Email</dt>
                 <dd>
                   <a
-                    href={`mailto:${SITE.email}`}
+                    href={`mailto:${config.email}`}
                     className="break-all text-white/85 transition-colors hover:text-brand">
 
-                    {SITE.email}
+                    {config.email}
                   </a>
                 </dd>
               </div>
@@ -95,16 +93,16 @@ export default function ContactPage() {
                 <dt className="text-lg font-semibold text-white">Phone</dt>
                 <dd>
                   <a
-                    href={telLink()}
+                    href={telLink(config)}
                     className="text-white/85 transition-colors hover:text-brand">
 
-                    {SITE.phoneDisplay}
+                    {config.phoneDisplay}
                   </a>
                 </dd>
               </div>
               <div>
                 <dt className="text-lg font-semibold text-white">Address</dt>
-                <dd className="text-white/85">{SITE.address.full}</dd>
+                <dd className="text-white/85">{config.address.full}</dd>
               </div>
             </dl>
           </div>
@@ -126,26 +124,26 @@ export default function ContactPage() {
               <ContactCard
                 icon={<Phone size={22} />}
                 title="Call Us"
-                value={SITE.phoneDisplay}
-                href={telLink()} />
-              
+                value={config.phoneDisplay}
+                href={telLink(config)} />
+
               <ContactCard
                 icon={<MessageCircle size={22} />}
                 title="WhatsApp"
                 value="Chat with us"
-                href={whatsappLink()}
+                href={whatsappLink(config)}
                 external />
-              
+
               <ContactCard
                 icon={<Mail size={22} />}
                 title="Email"
-                value={SITE.email}
-                href={`mailto:${SITE.email}`} />
-              
+                value={config.email}
+                href={`mailto:${config.email}`} />
+
               <ContactCard
                 icon={<Clock size={22} />}
                 title="Hours"
-                value={SITE.hours} />
+                value={config.hours} />
               
             </div>
 
@@ -173,13 +171,13 @@ export default function ContactPage() {
                 Follow Us
               </h3>
               <div className="mt-4 flex gap-3">
-                <Social href={SITE.social.instagram} label="Instagram">
+                <Social href={config.social.instagram} label="Instagram">
                   <Instagram size={20} />
                 </Social>
-                <Social href={SITE.social.facebook} label="Facebook">
+                <Social href={config.social.facebook} label="Facebook">
                   <Facebook size={20} />
                 </Social>
-                <Social href={SITE.social.youtube} label="YouTube">
+                <Social href={config.social.youtube} label="YouTube">
                   <Youtube size={20} />
                 </Social>
               </div>
@@ -188,7 +186,7 @@ export default function ContactPage() {
 
           {/* Form */}
           <div className="lg:col-span-7">
-            <ContactForm />
+            <ContactForm whatsappHref={whatsappLink(config)} />
           </div>
         </div>
 

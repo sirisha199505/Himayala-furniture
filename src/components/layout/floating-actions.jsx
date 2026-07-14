@@ -4,9 +4,9 @@ import * as React from "react";
 import { usePathname } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
 import { MessageCircle, Phone, ArrowUp } from "lucide-react";
-import { SITE, telLink, whatsappLink } from "@/lib/site";
+import { DEFAULT_STORE_CONFIG, telLink, whatsappLink } from "@/lib/store-config";
 
-export function FloatingActions() {
+export function FloatingActions({ config = DEFAULT_STORE_CONFIG }) {
   const pathname = usePathname();
   const [showTop, setShowTop] = React.useState(false);
 
@@ -36,15 +36,15 @@ export function FloatingActions() {
       </AnimatePresence>
 
       <a
-        href={telLink()}
-        aria-label={`Call ${SITE.phoneDisplay}`}
+        href={telLink(config)}
+        aria-label={`Call ${config.phoneDisplay}`}
         className="flex h-12 w-12 items-center justify-center rounded-full bg-brand text-white shadow-elevated transition-transform hover:scale-110 sm:h-13 sm:w-13">
-        
+
         <Phone size={21} />
       </a>
 
       <a
-        href={whatsappLink()}
+        href={whatsappLink(config)}
         target="_blank"
         rel="noopener noreferrer"
         aria-label="Chat on WhatsApp"

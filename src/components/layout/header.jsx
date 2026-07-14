@@ -15,7 +15,8 @@ import {
   ChevronDown } from
 "lucide-react";
 import { cn } from "@/lib/utils";
-import { MAIN_NAV, SITE, telLink, whatsappLink } from "@/lib/site";
+import { MAIN_NAV } from "@/lib/site";
+import { DEFAULT_STORE_CONFIG, telLink, whatsappLink } from "@/lib/store-config";
 import { categories } from "@/data/categories";
 import { collections } from "@/data/collections";
 import { Logo } from "@/components/layout/logo";
@@ -23,7 +24,7 @@ import { Button } from "@/components/ui/button";
 import { useWishlist, useCompare } from "@/store/wishlist";
 import { useMounted } from "@/lib/use-mounted";
 
-export function Header() {
+export function Header({ config = DEFAULT_STORE_CONFIG }) {
   const [scrolled, setScrolled] = React.useState(false);
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const [megaOpen, setMegaOpen] = React.useState(false);
@@ -57,10 +58,10 @@ export function Header() {
           </p>
           <div className="hidden items-center gap-4 sm:flex">
             <a
-              href={telLink()}
+              href={telLink(config)}
               className="flex items-center gap-1.5 transition-colors hover:text-charcoal">
-              
-              <Phone size={13} /> {SITE.phoneDisplay}
+
+              <Phone size={13} /> {config.phoneDisplay}
             </a>
             <Link
               href="/contact"
@@ -141,7 +142,7 @@ export function Header() {
               <GitCompareArrows size={19} />
             </IconLink>
             <Button asChild size="sm" className="ml-1 hidden sm:inline-flex">
-              <a href={whatsappLink()} target="_blank" rel="noopener noreferrer">
+              <a href={whatsappLink(config)} target="_blank" rel="noopener noreferrer">
                 Enquire
               </a>
             </Button>
@@ -228,7 +229,7 @@ export function Header() {
       </header>
 
       {/* Mobile drawer */}
-      <MobileDrawer open={mobileOpen} onClose={() => setMobileOpen(false)} />
+      <MobileDrawer open={mobileOpen} onClose={() => setMobileOpen(false)} config={config} />
     </>);
 
 }
@@ -256,7 +257,7 @@ function IconLink({
 
 }
 
-function MobileDrawer({ open, onClose }) {
+function MobileDrawer({ open, onClose, config = DEFAULT_STORE_CONFIG }) {
   const [shopOpen, setShopOpen] = React.useState(false);
   return (
     <AnimatePresence>
@@ -342,12 +343,12 @@ function MobileDrawer({ open, onClose }) {
             </nav>
             <div className="space-y-2 border-t border-border p-4">
               <Button asChild variant="whatsapp" className="w-full">
-                <a href={whatsappLink()} target="_blank" rel="noopener noreferrer">
+                <a href={whatsappLink(config)} target="_blank" rel="noopener noreferrer">
                   Chat on WhatsApp
                 </a>
               </Button>
               <Button asChild variant="outline" className="w-full">
-                <a href={telLink()}>Call {SITE.phoneDisplay}</a>
+                <a href={telLink(config)}>Call {config.phoneDisplay}</a>
               </Button>
             </div>
           </motion.aside>

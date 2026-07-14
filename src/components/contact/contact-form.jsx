@@ -3,7 +3,7 @@
 import * as React from "react";
 import { Check, Loader2, Send } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { whatsappLink } from "@/lib/site";
+import { whatsappLink } from "@/lib/store-config";
 
 const subjects = [
 "General Enquiry",
@@ -12,8 +12,9 @@ const subjects = [
 "Bulk / Corporate Order",
 "After-Sales Support"];
 
-export function ContactForm() {
+export function ContactForm({ whatsappHref }) {
   const [status, setStatus] = React.useState("idle");
+  const waHref = whatsappHref || whatsappLink();
 
   function onSubmit(e) {
     e.preventDefault();
@@ -33,7 +34,7 @@ export function ContactForm() {
           hours. For an instant response, message us on WhatsApp.
         </p>
         <Button asChild variant="whatsapp" size="lg" className="mt-6">
-          <a href={whatsappLink()} target="_blank" rel="noopener noreferrer">
+          <a href={waHref} target="_blank" rel="noopener noreferrer">
             Chat on WhatsApp
           </a>
         </Button>

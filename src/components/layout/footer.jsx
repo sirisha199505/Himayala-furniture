@@ -12,7 +12,7 @@ import {
   Send,
   ArrowRight } from
 "lucide-react";
-import { SITE, telLink, whatsappLink } from "@/lib/site";
+import { DEFAULT_STORE_CONFIG, telLink, whatsappLink } from "@/lib/store-config";
 import { categories } from "@/data/categories";
 import { Logo } from "@/components/layout/logo";
 import { Button } from "@/components/ui/button";
@@ -25,7 +25,7 @@ const company = [
 { label: "FAQ", href: "/faq" },
 { label: "Contact", href: "/contact" }];
 
-export function Footer() {
+export function Footer({ config = DEFAULT_STORE_CONFIG }) {
   const pathname = usePathname();
   if (pathname?.startsWith("/admin")) return null;
 
@@ -58,19 +58,19 @@ export function Footer() {
         <div className="col-span-2 lg:col-span-4">
           <Logo dark />
           <p className="mt-4 max-w-xs text-sm leading-relaxed text-white/60">
-            {SITE.description}
+            {config.description}
           </p>
           <div className="mt-5 flex gap-2.5">
-            <Social href={SITE.social.instagram} label="Instagram">
+            <Social href={config.social.instagram} label="Instagram">
               <Instagram size={18} />
             </Social>
-            <Social href={SITE.social.facebook} label="Facebook">
+            <Social href={config.social.facebook} label="Facebook">
               <Facebook size={18} />
             </Social>
-            <Social href={SITE.social.youtube} label="YouTube">
+            <Social href={config.social.youtube} label="YouTube">
               <Youtube size={18} />
             </Social>
-            <Social href={whatsappLink()} label="WhatsApp">
+            <Social href={whatsappLink(config)} label="WhatsApp">
               <Send size={17} />
             </Social>
           </div>
@@ -122,23 +122,23 @@ export function Footer() {
           <ul className="mt-4 space-y-3 text-sm text-white/65">
             <li>
               <a
-                href={telLink()}
+                href={telLink(config)}
                 className="flex items-center gap-2.5 transition-colors hover:text-white">
-                
-                <Phone size={16} className="text-bronze" /> {SITE.phoneDisplay}
+
+                <Phone size={16} className="text-bronze" /> {config.phoneDisplay}
               </a>
             </li>
             <li>
               <a
-                href={`mailto:${SITE.email}`}
+                href={`mailto:${config.email}`}
                 className="flex items-center gap-2.5 break-all transition-colors hover:text-white">
-                
-                <Mail size={16} className="text-bronze" /> {SITE.email}
+
+                <Mail size={16} className="text-bronze" /> {config.email}
               </a>
             </li>
             <li className="flex items-start gap-2.5">
               <MapPin size={16} className="mt-0.5 shrink-0 text-bronze" />
-              {SITE.address.full}
+              {config.address.full}
             </li>
           </ul>
           <form
@@ -169,7 +169,7 @@ export function Footer() {
       <div className="border-t border-white/10">
         <div className="mx-auto flex max-w-[88rem] flex-col items-center justify-between gap-3 px-5 py-5 text-xs text-white/50 sm:flex-row sm:px-8 lg:px-12">
           <p>
-            © {SITE.foundingYear}–2026 {SITE.name}. All rights reserved.
+            © {config.foundingYear}–2026 {config.name}. All rights reserved.
           </p>
           <div className="flex gap-5">
             <Link href="/faq" className="hover:text-white">
