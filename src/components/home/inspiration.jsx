@@ -11,25 +11,25 @@ const ideas = [
   title: "Living Room Ideas",
   desc: "Warm, inviting layouts that bring people together.",
   image: img(POOL.living[0], 900),
-  href: "/collections/living-room"
+  href: "/collections/residential-homes"
 },
 {
   title: "Bedroom Designs",
   desc: "Serene, clutter-free retreats for better rest.",
   image: img(POOL.beds[1], 900),
-  href: "/collections/bedroom"
+  href: "/collections/premium-luxury"
 },
 {
   title: "Workspace Inspiration",
   desc: "Productive, ergonomic spaces with boardroom polish.",
   image: img(POOL.office[0], 900),
-  href: "/collections/workspace"
+  href: "/collections/office-furniture"
 },
 {
   title: "Dining Space Concepts",
   desc: "Gather-worthy settings crafted in solid wood.",
   image: img(POOL.dining[0], 900),
-  href: "/collections/dining"
+  href: "/collections/hospitality"
 }];
 
 export function Inspiration() {

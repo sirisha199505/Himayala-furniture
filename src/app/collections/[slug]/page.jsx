@@ -11,10 +11,11 @@ import { breadcrumbLd, pageMeta } from "@/lib/seo";
 
 // Map each collection to the product categories it contains
 const COLLECTION_CATEGORIES = {
-  "living-room": ["sofas", "chairs", "tv-units", "storage-furniture"],
-  bedroom: ["beds", "wardrobes", "storage-furniture"],
-  dining: ["dining-sets", "storage-furniture"],
-  workspace: ["office-furniture", "study-tables", "chairs"]
+  "residential-homes": [
+  "sofas", "chairs", "tv-units", "beds", "wardrobes", "dining-sets", "storage-furniture"],
+  "office-furniture": ["office-furniture", "study-tables", "chairs", "storage-furniture"],
+  "premium-luxury": ["custom-furniture", "sofas", "beds", "wardrobes"],
+  hospitality: ["dining-sets", "chairs", "sofas", "storage-furniture"]
 };
 
 export function generateStaticParams() {

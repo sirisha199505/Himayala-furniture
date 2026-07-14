@@ -12,7 +12,7 @@ import { breadcrumbLd, pageMeta } from "@/lib/seo";
 export const metadata = pageMeta({
   title: "Collections",
   description:
-  "Explore curated furniture collections from Himalayan Furniture Mart — Living Room, Bedroom, Dining and Workspace collections crafted for beautiful living.",
+  "Explore curated furniture collections from Himalayan Furniture Mart — Residential Homes, Office Furniture, Premium & Luxury Interiors and Hospitality Projects.",
   path: "/collections"
 });
 
