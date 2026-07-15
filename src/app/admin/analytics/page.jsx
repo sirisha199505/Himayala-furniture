@@ -2,24 +2,10 @@
 
 import * as React from "react";
 import { Sofa, Inbox, ShoppingCart, Users } from "lucide-react";
+import { BarChart3 } from "lucide-react";
 import { getAnalytics } from "@/lib/api";
 import { formatPrice } from "@/lib/utils";
 import { useMounted } from "@/lib/use-mounted";
-
-const traffic = [
-{ month: "Jan", value: 62 },
-{ month: "Feb", value: 70 },
-{ month: "Mar", value: 58 },
-{ month: "Apr", value: 81 },
-{ month: "May", value: 92 },
-{ month: "Jun", value: 100 }];
-
-const sources = [
-{ label: "Organic Search", pct: 46 },
-{ label: "Direct", pct: 22 },
-{ label: "Social", pct: 18 },
-{ label: "Referral", pct: 9 },
-{ label: "AI / LLM Referrals", pct: 5 }];
 
 export default function AdminAnalytics() {
   const mounted = useMounted();
@@ -71,41 +57,15 @@ export default function AdminAnalytics() {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
-        <div className="rounded-2xl border border-border bg-surface p-6 lg:col-span-2">
-          <h2 className="font-display text-lg font-semibold text-charcoal">
-            Traffic Trend <span className="text-xs font-normal text-muted">(sample)</span>
-          </h2>
-          <div className="mt-6 flex h-48 items-end gap-3">
-            {traffic.map((t) =>
-            <div key={t.month} className="flex flex-1 flex-col items-center gap-2">
-                <div
-                className="w-full rounded-t-lg bg-brand/80 transition-all hover:bg-brand"
-                style={{ height: `${t.value}%` }} />
-
-                <span className="text-xs text-muted">{t.month}</span>
-              </div>
-            )}
-          </div>
-        </div>
-        <div className="rounded-2xl border border-border bg-surface p-6">
-          <h2 className="font-display text-lg font-semibold text-charcoal">
-            Traffic Sources <span className="text-xs font-normal text-muted">(sample)</span>
-          </h2>
-          <div className="mt-5 space-y-4">
-            {sources.map((s) =>
-            <div key={s.label}>
-                <div className="flex justify-between text-sm">
-                  <span className="text-warmbrown">{s.label}</span>
-                  <span className="font-medium text-charcoal">{s.pct}%</span>
-                </div>
-                <div className="mt-1.5 h-2 overflow-hidden rounded-full bg-beige">
-                  <div className="h-full rounded-full bg-brand" style={{ width: `${s.pct}%` }} />
-                </div>
-              </div>
-            )}
-          </div>
-        </div>
+      <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-border bg-surface px-6 py-12 text-center">
+        <BarChart3 size={28} className="text-muted" />
+        <h2 className="mt-3 font-display text-lg font-semibold text-charcoal">
+          Website traffic analytics
+        </h2>
+        <p className="mt-1 max-w-md text-sm text-warmbrown/70">
+          Traffic trends and sources will appear here once a web-analytics
+          provider (e.g. Google Analytics or Plausible) is connected.
+        </p>
       </div>
     </div>);
 
