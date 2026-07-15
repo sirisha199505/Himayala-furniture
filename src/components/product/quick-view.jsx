@@ -15,6 +15,7 @@ import { Rating } from "@/components/ui/rating";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { EnquiryDialog } from "@/components/product/enquiry-dialog";
+import { BuyActions } from "@/components/product/buy-actions";
 
 export function QuickView({
   product,
@@ -100,14 +101,32 @@ export function QuickView({
                   </span>
                 }
               </div>
-              <div className="flex gap-2">
-                <EnquiryDialog
-                  productName={product.name}
-                  trigger={<Button className="flex-1">Enquire Now</Button>} />
-                
-                <Button asChild variant="outline" className="flex-1">
-                  <Link href={`/products/${product.slug}`}>Full Details</Link>
-                </Button>
+              <div className="space-y-2">
+                <BuyActions
+                  slug={product.slug}
+                  price={product.price}
+                  inStock={product.inStock !== false} />
+
+                <div className="flex gap-2">
+                  <EnquiryDialog
+                    productName={product.name}
+                    trigger={
+                    <Button
+                      variant={
+                      product.price > 0 && product.inStock !== false ?
+                      "outline" :
+                      "primary"
+                      }
+                      className="flex-1">
+
+                        Enquire Now
+                      </Button>
+                    } />
+
+                  <Button asChild variant="outline" className="flex-1">
+                    <Link href={`/products/${product.slug}`}>Full Details</Link>
+                  </Button>
+                </div>
               </div>
             </div>
           </div>

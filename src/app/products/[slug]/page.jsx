@@ -28,6 +28,7 @@ import { ProductGallery } from "@/components/product/product-gallery";
 import { ProductActions } from "@/components/product/product-actions";
 import { ProductSlider } from "@/components/product/product-slider";
 import { EnquiryDialog } from "@/components/product/enquiry-dialog";
+import { BuyActions } from "@/components/product/buy-actions";
 import { JsonLd } from "@/components/seo/json-ld";
 import { productLd, breadcrumbLd, pageMeta } from "@/lib/seo";
 
@@ -201,11 +202,16 @@ export default async function ProductPage({
 
             {/* CTAs */}
             <div className="mt-7 space-y-3">
+              <BuyActions
+                slug={product.slug}
+                price={product.price}
+                inStock={product.inStock !== false} />
+
               <div className="flex flex-col gap-3 sm:flex-row">
                 <EnquiryDialog
                   productName={product.name}
                   trigger={
-                  <Button size="lg" className="flex-1">
+                  <Button size="lg" variant="outline" className="flex-1">
                       Enquire Now
                     </Button>
                   } />

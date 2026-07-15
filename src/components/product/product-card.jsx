@@ -3,7 +3,7 @@
 import * as React from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { Heart, GitCompareArrows, Eye, ArrowRight } from "lucide-react";
+import { Heart, GitCompareArrows, Eye, ArrowRight, ShoppingBag, Check } from "lucide-react";
 
 import { cn, formatPrice } from "@/lib/utils";
 import { Rating } from "@/components/ui/rating";
@@ -12,6 +12,7 @@ import { Button } from "@/components/ui/button";
 import { EnquiryDialog } from "@/components/product/enquiry-dialog";
 import { QuickView } from "@/components/product/quick-view";
 import { useWishlist, useCompare } from "@/store/wishlist";
+import { useCart } from "@/store/cart";
 import { useMounted } from "@/lib/use-mounted";
 
 export function ProductCard({ product }) {
@@ -19,12 +20,21 @@ export function ProductCard({ product }) {
   const [imgError, setImgError] = React.useState(false);
   const wishlist = useWishlist();
   const compare = useCompare();
+  const cart = useCart();
+  const [added, setAdded] = React.useState(false);
   const wished = mounted && wishlist.has(product.slug);
   const compared = mounted && compare.has(product.slug);
+  const purchasable = product.price > 0 && product.inStock !== false;
   const discount =
   product.mrp && product.mrp > product.price ?
   Math.round((product.mrp - product.price) / product.mrp * 100) :
   0;
+
+  function addToCart() {
+    cart.add(product.slug, 1);
+    setAdded(true);
+    setTimeout(() => setAdded(false), 1800);
+  }
 
   return (
     <div className="group relative flex flex-col overflow-hidden rounded-2xl border border-border bg-surface transition-all duration-500 hover:-translate-y-1 hover:shadow-elevated">
@@ -120,27 +130,40 @@ export function ProductCard({ product }) {
           }
         </div>
 
-        <div className="mt-4 flex gap-2">
-          <EnquiryDialog
-            productName={product.name}
-            trigger={
-            <Button size="sm" className="flex-1">
-                Enquire
-              </Button>
-            } />
+        <div className="mt-4 flex flex-col gap-2">
+          {purchasable &&
+          <Button size="sm" className="w-full" onClick={addToCart}>
+              {added ?
+            <><Check size={16} /> Added to Cart</> :
+            <><ShoppingBag size={16} /> Add to Cart</>}
+            </Button>
+          }
+          <div className="flex gap-2">
+            <EnquiryDialog
+              productName={product.name}
+              trigger={
+              <Button
+                size="sm"
+                variant={purchasable ? "outline" : "primary"}
+                className="flex-1">
 
-          <Button
-            asChild
-            size="sm"
-            variant="outline"
-            aria-label={`View details for ${product.name}`}
-            className="shrink-0 px-3 sm:px-4">
+                  Enquire
+                </Button>
+              } />
 
-            <Link href={`/products/${product.slug}`}>
-              <span className="hidden sm:inline">Details</span>
-              <ArrowRight size={16} />
-            </Link>
-          </Button>
+            <Button
+              asChild
+              size="sm"
+              variant="outline"
+              aria-label={`View details for ${product.name}`}
+              className="shrink-0 px-3 sm:px-4">
+
+              <Link href={`/products/${product.slug}`}>
+                <span className="hidden sm:inline">Details</span>
+                <ArrowRight size={16} />
+              </Link>
+            </Button>
+          </div>
         </div>
       </div>
     </div>);

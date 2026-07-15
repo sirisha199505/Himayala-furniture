@@ -10,6 +10,7 @@ import {
   X,
   Heart,
   GitCompareArrows,
+  ShoppingBag,
   Phone,
   ChevronRight,
   ChevronDown } from
@@ -22,6 +23,7 @@ import { collections } from "@/data/collections";
 import { Logo } from "@/components/layout/logo";
 import { Button } from "@/components/ui/button";
 import { useWishlist, useCompare } from "@/store/wishlist";
+import { useCart, cartCount } from "@/store/cart";
 import { useMounted } from "@/lib/use-mounted";
 
 export function Header({ config = DEFAULT_STORE_CONFIG }) {
@@ -32,6 +34,7 @@ export function Header({ config = DEFAULT_STORE_CONFIG }) {
   const mounted = useMounted();
   const wishCount = useWishlist((s) => s.items.length);
   const compareCount = useCompare((s) => s.items.length);
+  const cartQty = useCart(cartCount);
 
   React.useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 8);
@@ -140,6 +143,9 @@ export function Header({ config = DEFAULT_STORE_CONFIG }) {
             </IconLink>
             <IconLink href="/compare" label="Compare" count={mounted ? compareCount : 0}>
               <GitCompareArrows size={19} />
+            </IconLink>
+            <IconLink href="/cart" label="Cart" count={mounted ? cartQty : 0}>
+              <ShoppingBag size={19} />
             </IconLink>
             <Button asChild size="sm" className="ml-1 hidden sm:inline-flex">
               <a href={whatsappLink(config)} target="_blank" rel="noopener noreferrer">
