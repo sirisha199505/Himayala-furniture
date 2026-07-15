@@ -38,6 +38,7 @@ export default function CheckoutPage() {
   const [method, setMethod] = React.useState("online");
   const [status, setStatus] = React.useState("idle"); // idle | processing
   const [error, setError] = React.useState("");
+  const [pin, setPin] = React.useState({ status: "idle", msg: "" }); // idle|loading|ok|error
 
   const lines = cart.items.
   map((i) => ({ ...i, product: productBySlug(i.slug) })).
@@ -46,6 +47,36 @@ export default function CheckoutPage() {
 
   function set(k, v) {
     setForm((f) => ({ ...f, [k]: v }));
+    if (k === "pincode") lookupPincode(v);
+  }
+
+  // India Post lookup: fill District (city) + State from a 6-digit pincode.
+  async function lookupPincode(value) {
+    const code = String(value || "").replace(/\D/g, "");
+    if (code.length !== 6) {
+      setPin({ status: "idle", msg: "" });
+      return;
+    }
+    setPin({ status: "loading", msg: "Detecting location…" });
+    try {
+      const res = await fetch(`https://api.postalpincode.in/pincode/${code}`);
+      const data = await res.json();
+      const rec = Array.isArray(data) ? data[0] : null;
+      const po = rec?.Status === "Success" ? rec.PostOffice?.[0] : null;
+      if (po) {
+        // Only apply if the pincode hasn't changed since we fired the request.
+        setForm((f) =>
+        f.pincode.replace(/\D/g, "") === code ?
+        { ...f, city: po.District || f.city, state: po.State || f.state } :
+        f
+        );
+        setPin({ status: "ok", msg: `${po.District}, ${po.State}` });
+      } else {
+        setPin({ status: "error", msg: "Pincode not found — enter city & state manually" });
+      }
+    } catch {
+      setPin({ status: "error", msg: "Couldn't detect — enter city & state manually" });
+    }
   }
 
   const items = cart.items.map((i) => ({ slug: i.slug, qty: i.qty }));
@@ -171,15 +202,41 @@ export default function CheckoutPage() {
                 set={set}
                 className="sm:col-span-2" />
 
-              <Field label="City" name="city" form={form} set={set} />
-              <Field label="State" name="state" form={form} set={set} />
-              <Field
-                label="Pincode"
-                name="pincode"
-                required={false}
-                form={form}
-                set={set} />
+              {/* Pincode drives city/state via India Post lookup */}
+              <div>
+                <label htmlFor="pincode" className="mb-1.5 block text-sm font-medium text-charcoal">
+                  Pincode
+                </label>
+                <input
+                  id="pincode"
+                  name="pincode"
+                  type="text"
+                  inputMode="numeric"
+                  maxLength={6}
+                  value={form.pincode}
+                  onChange={(e) => set("pincode", e.target.value.replace(/\D/g, ""))}
+                  className="w-full rounded-xl border border-border bg-ivory px-4 py-2.5 text-sm outline-none focus:border-brand" />
 
+                {pin.msg &&
+                <p
+                  className={`mt-1 text-xs ${
+                  pin.status === "error" ?
+                  "text-brand" :
+                  pin.status === "ok" ?
+                  "text-success" :
+                  "text-muted"}`
+                  }>
+
+                    {pin.status === "loading" && "⏳ "}
+                    {pin.status === "ok" && "📍 "}
+                    {pin.msg}
+                  </p>
+                }
+              </div>
+              <div className="hidden sm:block" />
+
+              <Field label="City / District" name="city" form={form} set={set} />
+              <Field label="State" name="state" form={form} set={set} />
             </div>
           </section>
 
