@@ -175,7 +175,7 @@ export function Footer({ config = DEFAULT_STORE_CONFIG }) {
             <Link href="/faq" className="hover:text-white">
               Support
             </Link>
-            <span>Crafted for beautiful living</span>
+            <span>Powdered by Srinishtha Technologies LLP</span>
           </div>
         </div>
       </div>

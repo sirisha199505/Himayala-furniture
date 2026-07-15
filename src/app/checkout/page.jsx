@@ -36,6 +36,7 @@ export default function CheckoutPage() {
   const cart = useCart();
   const [form, setForm] = React.useState(empty);
   const [method, setMethod] = React.useState("online");
+  
   const [status, setStatus] = React.useState("idle"); // idle | processing
   const [error, setError] = React.useState("");
   const [pin, setPin] = React.useState({ status: "idle", msg: "" }); // idle|loading|ok|error
