@@ -1,7 +1,7 @@
 "use client";
 
 import { create } from "zustand";
-import { persist } from "zustand/middleware";
+import { persist, createJSONStorage } from "zustand/middleware";
 import { apiLogin } from "@/lib/api";
 
 // Backend role int -> frontend role key
@@ -42,7 +42,14 @@ export const useAdminAuth = create()(
       },
       logout: () => set({ user: null, token: null })
     }),
-    { name: "hfm-admin-auth" }
+    {
+      name: "hfm-admin-auth",
+      // sessionStorage = the admin session is cleared when the tab/browser is
+      // closed, so reopening the site requires logging in again.
+      storage: createJSONStorage(() =>
+      typeof window !== "undefined" ? window.sessionStorage : undefined
+      )
+    }
   )
 );
 

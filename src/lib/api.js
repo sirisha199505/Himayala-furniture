@@ -15,7 +15,7 @@ const AUTH_STORAGE_KEY = "hfm-admin-auth";
 export function getToken() {
   if (typeof window === "undefined") return null;
   try {
-    const raw = window.localStorage.getItem(AUTH_STORAGE_KEY);
+    const raw = window.sessionStorage.getItem(AUTH_STORAGE_KEY);
     if (!raw) return null;
     return JSON.parse(raw)?.state?.token ?? null;
   } catch {
@@ -73,7 +73,7 @@ async function request(method, path, { body, query } = {}) {
   if (res.status === 401 && typeof window !== "undefined") {
     // Session expired / invalid — bounce to login.
     try {
-      window.localStorage.removeItem(AUTH_STORAGE_KEY);
+      window.sessionStorage.removeItem(AUTH_STORAGE_KEY);
     } catch {}
     if (!window.location.pathname.startsWith("/admin/login")) {
       window.location.href = "/admin/login";
