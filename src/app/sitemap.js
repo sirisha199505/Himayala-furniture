@@ -1,14 +1,15 @@
 
 import { SITE } from "@/lib/site";
-import { products } from "@/data/products";
+import { getProducts } from "@/lib/catalog";
 import { collections } from "@/data/collections";
 import { blogPosts } from "@/data/blog";
 import { caseStudies } from "@/data/caseStudies";
 import { stories } from "@/data/stories";
 
-export default function sitemap() {
+export default async function sitemap() {
   const base = SITE.url;
   const now = new Date();
+  const products = await getProducts();
 
   const staticPages = [
   "",

@@ -6,13 +6,14 @@ import { Minus, Plus, Trash2, ShoppingBag, ArrowRight } from "lucide-react";
 import { Container } from "@/components/layout/container";
 import { Button } from "@/components/ui/button";
 import { formatPrice } from "@/lib/utils";
-import { productBySlug } from "@/data/products";
 import { useCart } from "@/store/cart";
+import { useCatalog } from "@/components/providers/catalog-provider";
 import { useMounted } from "@/lib/use-mounted";
 
 export default function CartPage() {
   const mounted = useMounted();
   const cart = useCart();
+  const { productBySlug } = useCatalog();
 
   // Resolve cart lines against the catalog; drop anything unknown.
   const lines = cart.items.

@@ -10,12 +10,7 @@ import {
   MessageCircle,
   FileText } from
 "lucide-react";
-import {
-  products,
-  productBySlug,
-  productsByCategory } from
-"@/data/products";
-import { categoryBySlug } from "@/data/categories";
+import { getProduct, getProducts, getCategories } from "@/lib/catalog";
 import { formatPrice } from "@/lib/utils";
 import { whatsappLink } from "@/lib/site";
 import { Container } from "@/components/layout/container";
@@ -32,16 +27,23 @@ import { BuyActions } from "@/components/product/buy-actions";
 import { JsonLd } from "@/components/seo/json-ld";
 import { productLd, breadcrumbLd, pageMeta } from "@/lib/seo";
 
-export function generateStaticParams() {
-  return products.map((p) => ({ slug: p.slug }));
+// Render product pages on demand (ISR) rather than all at build time — the
+// catalog is DB-driven and can be large, and building every page against the
+// API is slow/fragile. Pages are generated on first request and cached, then
+// revalidated. generateStaticParams intentionally returns [] (pre-render none).
+export async function generateStaticParams() {
+  return [];
 }
+
+export const dynamicParams = true;
+export const revalidate = 300;
 
 export async function generateMetadata({
   params
 
 }) {
   const { slug } = await params;
-  const product = productBySlug(slug);
+  const product = await getProduct(slug);
   if (!product) return { title: "Product not found" };
   return pageMeta({
     title: product.name,
@@ -56,14 +58,16 @@ export default async function ProductPage({
 
 }) {
   const { slug } = await params;
-  const product = productBySlug(slug);
+  const product = await getProduct(slug);
   if (!product) notFound();
 
-  const category = categoryBySlug(product.category);
-  const related = productsByCategory(product.category).
-  filter((p) => p.slug !== product.slug).
+  const categories = await getCategories();
+  const category = categories.find((c) => c.slug === product.category);
+  const all = await getProducts();
+  const related = all.
+  filter((p) => p.category === product.category && p.slug !== product.slug).
   slice(0, 8);
-  const filler = products.filter((p) => p.slug !== product.slug).slice(0, 8);
+  const filler = all.filter((p) => p.slug !== product.slug).slice(0, 8);
   const relatedList = (related.length >= 4 ? related : filler).slice(0, 8);
 
   const discount =

@@ -1,12 +1,13 @@
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
-import { categories } from "@/data/categories";
+import { getCategories } from "@/lib/catalog";
 import { Container } from "@/components/layout/container";
 import { SectionHeading } from "@/components/layout/section-heading";
 import { Stagger, StaggerItem } from "@/components/motion/reveal";
 
-export function CategoryGrid() {
+export async function CategoryGrid() {
+  const categories = await getCategories();
   return (
     <section className="py-16 sm:py-20">
       <Container>

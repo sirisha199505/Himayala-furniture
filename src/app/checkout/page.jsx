@@ -8,8 +8,8 @@ import { Container } from "@/components/layout/container";
 import { Button } from "@/components/ui/button";
 import { formatPrice } from "@/lib/utils";
 import { SITE } from "@/lib/site";
-import { productBySlug } from "@/data/products";
 import { useCart } from "@/store/cart";
+import { useCatalog } from "@/components/providers/catalog-provider";
 import { useMounted } from "@/lib/use-mounted";
 import {
   createRazorpayOrder,
@@ -34,6 +34,7 @@ export default function CheckoutPage() {
   const mounted = useMounted();
   const router = useRouter();
   const cart = useCart();
+  const { productBySlug } = useCatalog();
   const [form, setForm] = React.useState(empty);
   const [method, setMethod] = React.useState("online");
   

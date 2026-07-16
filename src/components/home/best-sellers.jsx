@@ -1,12 +1,14 @@
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
-import { bestSellers } from "@/data/products";
+import { getProducts, bestSellersOf } from "@/lib/catalog";
 import { Container } from "@/components/layout/container";
 import { Reveal } from "@/components/motion/reveal";
 import { ProductSlider } from "@/components/product/product-slider";
 import { Button } from "@/components/ui/button";
 
-export function BestSellers() {
+export async function BestSellers() {
+  const products = await getProducts();
+  const featured = bestSellersOf(products);
   return (
     <section className="bg-beige/60 py-16 sm:py-20">
       <Container>
@@ -29,7 +31,7 @@ export function BestSellers() {
         </div>
 
         <div className="mt-12">
-          <ProductSlider products={bestSellers()} />
+          <ProductSlider products={featured} />
         </div>
       </Container>
     </section>);

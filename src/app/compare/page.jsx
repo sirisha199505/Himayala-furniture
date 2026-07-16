@@ -3,8 +3,8 @@
 import Link from "next/link";
 import Image from "next/image";
 import { GitCompareArrows, X, ArrowRight, Check, Minus } from "lucide-react";
-import { productBySlug } from "@/data/products";
 import { useCompare } from "@/store/wishlist";
+import { useCatalog } from "@/components/providers/catalog-provider";
 import { useMounted } from "@/lib/use-mounted";
 import { formatPrice } from "@/lib/utils";
 import { Container } from "@/components/layout/container";
@@ -16,6 +16,7 @@ import { EnquiryDialog } from "@/components/product/enquiry-dialog";
 export default function ComparePage() {
   const mounted = useMounted();
   const { items, toggle, clear } = useCompare();
+  const { productBySlug } = useCatalog();
   const products = mounted ?
   items.map(productBySlug).filter((p) => p !== undefined) :
   [];

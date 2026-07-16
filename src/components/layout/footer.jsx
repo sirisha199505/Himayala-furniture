@@ -13,9 +13,9 @@ import {
   ArrowRight } from
 "lucide-react";
 import { DEFAULT_STORE_CONFIG, telLink, whatsappLink } from "@/lib/store-config";
-import { categories } from "@/data/categories";
 import { Logo } from "@/components/layout/logo";
 import { Button } from "@/components/ui/button";
+import { useCatalog } from "@/components/providers/catalog-provider";
 
 const company = [
 { label: "Our Story", href: "/stories" },
@@ -27,6 +27,7 @@ const company = [
 
 export function Footer({ config = DEFAULT_STORE_CONFIG }) {
   const pathname = usePathname();
+  const { categories } = useCatalog();
   if (pathname?.startsWith("/admin")) return null;
 
   return (

@@ -18,12 +18,12 @@ import {
 import { cn } from "@/lib/utils";
 import { MAIN_NAV } from "@/lib/site";
 import { DEFAULT_STORE_CONFIG, telLink, whatsappLink } from "@/lib/store-config";
-import { categories } from "@/data/categories";
 import { collections } from "@/data/collections";
 import { Logo } from "@/components/layout/logo";
 import { Button } from "@/components/ui/button";
 import { useWishlist, useCompare } from "@/store/wishlist";
 import { useCart, cartCount } from "@/store/cart";
+import { useCatalog } from "@/components/providers/catalog-provider";
 import { useMounted } from "@/lib/use-mounted";
 
 export function Header({ config = DEFAULT_STORE_CONFIG }) {
@@ -35,6 +35,7 @@ export function Header({ config = DEFAULT_STORE_CONFIG }) {
   const wishCount = useWishlist((s) => s.items.length);
   const compareCount = useCompare((s) => s.items.length);
   const cartQty = useCart(cartCount);
+  const { categories } = useCatalog();
 
   React.useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 8);
@@ -265,6 +266,7 @@ function IconLink({
 
 function MobileDrawer({ open, onClose, config = DEFAULT_STORE_CONFIG }) {
   const [shopOpen, setShopOpen] = React.useState(false);
+  const { categories } = useCatalog();
   return (
     <AnimatePresence>
       {open &&

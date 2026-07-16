@@ -7,13 +7,14 @@ import { AnimatePresence, motion } from "framer-motion";
 import { X, GitCompareArrows } from "lucide-react";
 import { useCompare } from "@/store/wishlist";
 import { useMounted } from "@/lib/use-mounted";
-import { productBySlug } from "@/data/products";
+import { useCatalog } from "@/components/providers/catalog-provider";
 import { Button } from "@/components/ui/button";
 
 export function CompareBar() {
   const mounted = useMounted();
   const pathname = usePathname();
   const { items, toggle, clear } = useCompare();
+  const { productBySlug } = useCatalog();
 
   if (!mounted || pathname?.startsWith("/admin")) return null;
   const products = items.map(productBySlug).filter(Boolean);

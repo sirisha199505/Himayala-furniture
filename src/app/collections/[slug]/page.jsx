@@ -2,7 +2,7 @@
 import { notFound } from "next/navigation";
 import Image from "next/image";
 import { collections, collectionBySlug, collectionCategories } from "@/data/collections";
-import { products } from "@/data/products";
+import { getProducts } from "@/lib/catalog";
 import { Container } from "@/components/layout/container";
 import { Breadcrumbs } from "@/components/layout/page-header";
 import { ProductCard } from "@/components/product/product-card";
@@ -12,6 +12,8 @@ import { breadcrumbLd, pageMeta } from "@/lib/seo";
 export function generateStaticParams() {
   return collections.map((c) => ({ slug: c.slug }));
 }
+
+export const revalidate = 300;
 
 export async function generateMetadata({
   params
@@ -37,6 +39,7 @@ export default async function CollectionPage({
   if (!col) notFound();
 
   const cats = collectionCategories[col.slug] ?? [];
+  const products = await getProducts();
   const items = products.filter((p) => cats.includes(p.category));
 
   return (

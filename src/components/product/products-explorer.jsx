@@ -4,16 +4,16 @@ import * as React from "react";
 import { useSearchParams } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
 import { Search, SlidersHorizontal, X, ChevronDown, Frown } from "lucide-react";
-import { products, allMaterials, allColors, priceRange } from "@/data/products";
-import { categories } from "@/data/categories";
 import { collections, collectionCategories } from "@/data/collections";
 import { cn, formatPrice } from "@/lib/utils";
 import { ProductCard } from "@/components/product/product-card";
 import { Button } from "@/components/ui/button";
+import { useCatalog } from "@/components/providers/catalog-provider";
 
 const PAGE_SIZE = 8;
 
 export function ProductsExplorer() {
+  const { products, categories, allMaterials, allColors, priceRange } = useCatalog();
   const params = useSearchParams();
   const initialCategory = params.get("category");
   const initialCollection = params.get("collection");

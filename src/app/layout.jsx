@@ -9,6 +9,7 @@ import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
 import { FloatingActions } from "@/components/layout/floating-actions";
 import { CompareBar } from "@/components/layout/compare-bar";
+import { CatalogProvider } from "@/components/providers/catalog-provider";
 
 const playfair = Playfair_Display({
   subsets: ["latin"],
@@ -103,11 +104,13 @@ export default async function RootLayout({
           
           Skip to content
         </a>
-        <Header config={config} />
-        <main id="main">{children}</main>
-        <Footer config={config} />
-        <FloatingActions config={config} />
-        <CompareBar />
+        <CatalogProvider>
+          <Header config={config} />
+          <main id="main">{children}</main>
+          <Footer config={config} />
+          <FloatingActions config={config} />
+          <CompareBar />
+        </CatalogProvider>
       </body>
     </html>);
 

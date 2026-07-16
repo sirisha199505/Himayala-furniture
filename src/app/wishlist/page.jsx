@@ -2,8 +2,8 @@
 
 import Link from "next/link";
 import { Heart, ArrowRight } from "lucide-react";
-import { productBySlug } from "@/data/products";
 import { useWishlist } from "@/store/wishlist";
+import { useCatalog } from "@/components/providers/catalog-provider";
 import { useMounted } from "@/lib/use-mounted";
 import { Container } from "@/components/layout/container";
 import { Breadcrumbs } from "@/components/layout/page-header";
@@ -13,6 +13,7 @@ import { Button } from "@/components/ui/button";
 export default function WishlistPage() {
   const mounted = useMounted();
   const { items, clear } = useWishlist();
+  const { productBySlug } = useCatalog();
   const products = mounted ?
   items.map(productBySlug).filter((p) => p !== undefined) :
   [];
