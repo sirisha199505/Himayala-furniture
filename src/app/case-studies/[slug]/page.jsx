@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import { MapPin, Target, AlertTriangle, Lightbulb, Trophy, Check, ArrowRight } from "lucide-react";
-import { caseStudies, caseStudyBySlug } from "@/data/caseStudies";
+import { getCaseStudy } from "@/lib/catalog";
 import { Container } from "@/components/layout/container";
 import { Breadcrumbs } from "@/components/layout/page-header";
 import { Badge } from "@/components/ui/badge";
@@ -12,16 +12,19 @@ import { EnquiryDialog } from "@/components/product/enquiry-dialog";
 import { JsonLd } from "@/components/seo/json-ld";
 import { breadcrumbLd, pageMeta } from "@/lib/seo";
 
-export function generateStaticParams() {
-  return caseStudies.map((c) => ({ slug: c.slug }));
+export async function generateStaticParams() {
+  return [];
 }
+
+export const dynamicParams = true;
+export const revalidate = 300;
 
 export async function generateMetadata({
   params
 
 }) {
   const { slug } = await params;
-  const cs = caseStudyBySlug(slug);
+  const cs = await getCaseStudy(slug);
   if (!cs) return { title: "Case study not found" };
   return pageMeta({
     title: cs.title,
@@ -37,7 +40,7 @@ export default async function CaseStudyPage({
 
 }) {
   const { slug } = await params;
-  const cs = caseStudyBySlug(slug);
+  const cs = await getCaseStudy(slug);
   if (!cs) notFound();
 
   return (

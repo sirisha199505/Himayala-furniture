@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import { Package, Truck, Wrench, ShieldCheck, Ruler, RotateCcw, HelpCircle } from "lucide-react";
-import { faqs, faqCategories } from "@/data/faqs";
+import { faqs as STATIC_FAQS } from "@/data/faqs";
 import { cn } from "@/lib/utils";
 import {
   Accordion,
@@ -20,9 +20,13 @@ const ICONS = {
   Returns: RotateCcw
 };
 
-export function FaqExplorer() {
-  const [active, setActive] = React.useState("Products");
-  const list = faqs.filter((f) => f.category === active);
+export function FaqExplorer({ items = STATIC_FAQS }) {
+  const faqCategories = React.useMemo(
+    () => Array.from(new Set(items.map((f) => f.category))),
+    [items]
+  );
+  const [active, setActive] = React.useState(faqCategories[0] ?? "Products");
+  const list = items.filter((f) => f.category === active);
 
   return (
     <div className="grid grid-cols-1 gap-8 lg:grid-cols-12">
@@ -60,7 +64,7 @@ export function FaqExplorer() {
                       isActive ? "text-white/70" : "text-muted"
                     )}>
                     
-                    {faqs.filter((f) => f.category === c).length}
+                    {items.filter((f) => f.category === c).length}
                   </span>
                 </button>);
 

@@ -13,6 +13,11 @@ import {
   products as STATIC_PRODUCTS } from
 "@/data/products";
 import { categories as STATIC_CATEGORIES } from "@/data/categories";
+import { blogPosts as STATIC_BLOGS } from "@/data/blog";
+import { caseStudies as STATIC_CASE_STUDIES } from "@/data/caseStudies";
+import { stories as STATIC_STORIES } from "@/data/stories";
+import { galleryItems as STATIC_GALLERY } from "@/data/gallery";
+import { faqs as STATIC_FAQS } from "@/data/faqs";
 
 const REVALIDATE = 300; // seconds — admin edits appear within ~5 min
 
@@ -47,6 +52,24 @@ export async function getProduct(slug) {
 export async function getCategories() {
   return fetchPublic("categories", STATIC_CATEGORIES);
 }
+
+// --- Editorial content ------------------------------------------------------
+async function getBySlug(list, slug, fallbackList) {
+  const data = await fetchPublic(`${list}/slug/${encodeURIComponent(slug)}`, null);
+  return data || fallbackList.find((x) => x.slug === slug) || null;
+}
+
+export const getBlogs = () => fetchPublic("blogs", STATIC_BLOGS);
+export const getBlog = (slug) => getBySlug("blogs", slug, STATIC_BLOGS);
+
+export const getCaseStudies = () => fetchPublic("case-studies", STATIC_CASE_STUDIES);
+export const getCaseStudy = (slug) => getBySlug("case-studies", slug, STATIC_CASE_STUDIES);
+
+export const getStories = () => fetchPublic("stories", STATIC_STORIES);
+export const getStory = (slug) => getBySlug("stories", slug, STATIC_STORIES);
+
+export const getGallery = () => fetchPublic("gallery", STATIC_GALLERY);
+export const getFaqs = () => fetchPublic("faqs", STATIC_FAQS);
 
 // --- Derived helpers (mirror the old module-level exports in products.js) ----
 export const bestSellersOf = (products) => products.filter((p) => p.bestSeller);

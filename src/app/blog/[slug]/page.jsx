@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import { Calendar, ArrowLeft, ArrowRight } from "lucide-react";
-import { blogPosts, blogBySlug } from "@/data/blog";
+import { getBlog, getBlogs } from "@/lib/catalog";
 import { readingTime } from "@/lib/utils";
 import { Container } from "@/components/layout/container";
 import { Breadcrumbs } from "@/components/layout/page-header";
@@ -13,16 +13,19 @@ import { Button } from "@/components/ui/button";
 import { JsonLd } from "@/components/seo/json-ld";
 import { articleLd, breadcrumbLd, pageMeta } from "@/lib/seo";
 
-export function generateStaticParams() {
-  return blogPosts.map((p) => ({ slug: p.slug }));
+export async function generateStaticParams() {
+  return [];
 }
+
+export const dynamicParams = true;
+export const revalidate = 300;
 
 export async function generateMetadata({
   params
 
 }) {
   const { slug } = await params;
-  const post = blogBySlug(slug);
+  const post = await getBlog(slug);
   if (!post) return { title: "Article not found" };
   return pageMeta({
     title: post.title,
@@ -38,9 +41,10 @@ export default async function BlogPostPage({
 
 }) {
   const { slug } = await params;
-  const post = blogBySlug(slug);
+  const post = await getBlog(slug);
   if (!post) notFound();
 
+  const blogPosts = await getBlogs();
   const related = blogPosts.
   filter((p) => p.slug !== post.slug && p.category === post.category).
   slice(0, 3);

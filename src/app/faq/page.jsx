@@ -1,7 +1,7 @@
 
 import Link from "next/link";
 import { MessageCircle, Phone } from "lucide-react";
-import { faqs } from "@/data/faqs";
+import { getFaqs } from "@/lib/catalog";
 import { SITE, telLink, whatsappLink } from "@/lib/site";
 import { Container } from "@/components/layout/container";
 import { PageHeader } from "@/components/layout/page-header";
@@ -17,7 +17,10 @@ export const metadata = pageMeta({
   path: "/faq"
 });
 
-export default function FaqPage() {
+export const revalidate = 300;
+
+export default async function FaqPage() {
+  const faqs = await getFaqs();
   return (
     <>
       <JsonLd
@@ -39,7 +42,7 @@ export default function FaqPage() {
         } />
       
       <Container className="py-14">
-        <FaqExplorer />
+        <FaqExplorer items={faqs} />
 
         {/* Still need help */}
         <div className="mt-14 overflow-hidden rounded-3xl bg-charcoal px-6 py-12 text-center text-white sm:px-12">

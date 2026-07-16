@@ -1,5 +1,5 @@
 
-import { galleryItems, galleryCategories } from "@/data/gallery";
+import { getGallery } from "@/lib/catalog";
 import { Container } from "@/components/layout/container";
 import { PageHeader } from "@/components/layout/page-header";
 import { MasonryGallery } from "@/components/gallery/masonry-gallery";
@@ -13,7 +13,13 @@ export const metadata = pageMeta({
   path: "/gallery"
 });
 
-export default function GalleryPage() {
+export const revalidate = 300;
+
+export default async function GalleryPage() {
+  const galleryItems = await getGallery();
+  const galleryCategories = [
+  "All",
+  ...Array.from(new Set(galleryItems.map((g) => g.category)))];
   return (
     <>
       <JsonLd

@@ -4,7 +4,7 @@ import * as React from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight, Calendar } from "lucide-react";
-import { blogPosts, blogCategories } from "@/data/blog";
+import { blogPosts as STATIC_POSTS } from "@/data/blog";
 import { cn, readingTime } from "@/lib/utils";
 
 function formatDate(iso) {
@@ -15,13 +15,13 @@ function formatDate(iso) {
   });
 }
 
-export function BlogList() {
+export function BlogList({ posts: allPosts = STATIC_POSTS, categories = [] }) {
   const [active, setActive] = React.useState("All");
-  const cats = ["All", ...blogCategories];
+  const cats = ["All", ...(categories.length ? categories : Array.from(new Set(allPosts.map((p) => p.category))))];
   const posts =
   active === "All" ?
-  blogPosts :
-  blogPosts.filter((p) => p.category === active);
+  allPosts :
+  allPosts.filter((p) => p.category === active);
 
   const [featured, ...rest] = posts;
 

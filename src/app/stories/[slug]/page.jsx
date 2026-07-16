@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowLeft, ArrowRight } from "lucide-react";
-import { stories, storyBySlug } from "@/data/stories";
+import { getStory, getStories } from "@/lib/catalog";
 import { Container } from "@/components/layout/container";
 import { Breadcrumbs } from "@/components/layout/page-header";
 import { Prose } from "@/components/content/prose";
@@ -12,16 +12,19 @@ import { EnquiryDialog } from "@/components/product/enquiry-dialog";
 import { JsonLd } from "@/components/seo/json-ld";
 import { breadcrumbLd, pageMeta } from "@/lib/seo";
 
-export function generateStaticParams() {
-  return stories.map((s) => ({ slug: s.slug }));
+export async function generateStaticParams() {
+  return [];
 }
+
+export const dynamicParams = true;
+export const revalidate = 300;
 
 export async function generateMetadata({
   params
 
 }) {
   const { slug } = await params;
-  const story = storyBySlug(slug);
+  const story = await getStory(slug);
   if (!story) return { title: "Story not found" };
   return pageMeta({
     title: story.title,
@@ -37,11 +40,12 @@ export default async function StoryPage({
 
 }) {
   const { slug } = await params;
-  const story = storyBySlug(slug);
+  const story = await getStory(slug);
   if (!story) notFound();
 
-  const next =
-  stories[(stories.findIndex((s) => s.slug === slug) + 1) % stories.length];
+  const stories = await getStories();
+  const idx = stories.findIndex((s) => s.slug === slug);
+  const next = stories.length ? stories[(idx + 1) % stories.length] : null;
 
   return (
     <>

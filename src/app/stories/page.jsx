@@ -2,7 +2,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
-import { stories } from "@/data/stories";
+import { getStories } from "@/lib/catalog";
 import { stats } from "@/data/why";
 import { Container } from "@/components/layout/container";
 import { PageHeader } from "@/components/layout/page-header";
@@ -17,7 +17,10 @@ export const metadata = pageMeta({
   path: "/stories"
 });
 
-export default function StoriesPage() {
+export const revalidate = 300;
+
+export default async function StoriesPage() {
+  const stories = await getStories();
   const [feature, ...rest] = stories;
   return (
     <>

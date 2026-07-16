@@ -4,6 +4,9 @@ import { PageHeader } from "@/components/layout/page-header";
 import { BlogList } from "@/components/blog/blog-list";
 import { JsonLd } from "@/components/seo/json-ld";
 import { breadcrumbLd, pageMeta } from "@/lib/seo";
+import { getBlogs } from "@/lib/catalog";
+
+export const revalidate = 300;
 
 export const metadata = pageMeta({
   title: "Blog & Guides",
@@ -12,7 +15,9 @@ export const metadata = pageMeta({
   path: "/blog"
 });
 
-export default function BlogPage() {
+export default async function BlogPage() {
+  const posts = await getBlogs();
+  const categories = Array.from(new Set(posts.map((p) => p.category)));
   return (
     <>
       <JsonLd
@@ -31,7 +36,7 @@ export default function BlogPage() {
         } />
       
       <Container className="py-14">
-        <BlogList />
+        <BlogList posts={posts} categories={categories} />
       </Container>
     </>);
 

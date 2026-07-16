@@ -2,7 +2,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight, MapPin } from "lucide-react";
-import { caseStudies } from "@/data/caseStudies";
+import { getCaseStudies } from "@/lib/catalog";
 import { Container } from "@/components/layout/container";
 import { PageHeader } from "@/components/layout/page-header";
 import { Reveal } from "@/components/motion/reveal";
@@ -17,7 +17,10 @@ export const metadata = pageMeta({
   path: "/case-studies"
 });
 
-export default function CaseStudiesPage() {
+export const revalidate = 300;
+
+export default async function CaseStudiesPage() {
+  const caseStudies = await getCaseStudies();
   return (
     <>
       <JsonLd
