@@ -59,7 +59,7 @@ export default function AdminLoginPage() {
           <p className="mb-3 text-xs font-semibold uppercase tracking-[0.2em] text-bronze">
             Admin Console
           </p>
-          <h1 className="font-display text-4xl font-bold leading-tight sm:text-5xl">
+          <h1 className="font-display text-4xl font-bold leading-tight text-white sm:text-5xl">
             Manage your store,<br />beautifully.
           </h1>
           <p className="mt-4 max-w-sm text-white/75">
