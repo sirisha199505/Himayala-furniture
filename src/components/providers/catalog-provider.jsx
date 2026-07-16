@@ -14,7 +14,8 @@ import {
   bestSellersOf,
   materialsOf,
   colorsOf,
-  priceRangeOf } from
+  priceRangeOf,
+  normalizeProduct } from
 "@/lib/catalog";
 
 const CatalogContext = React.createContext(null);
@@ -42,7 +43,7 @@ export function CatalogProvider({ children }) {
     loadPublic("categories", STATIC_CATEGORIES)]).
     then(([p, c]) => {
       if (!alive) return;
-      setProducts(p);
+      setProducts(p.map(normalizeProduct));
       setCategories(c);
     }).
     finally(() => alive && setLoading(false));

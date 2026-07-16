@@ -40,13 +40,31 @@ async function fetchPublic(path, fallback) {
 }
 
 // --- Products ---------------------------------------------------------------
+// The DB serializes numeric columns like `rating` (a BigDecimal) as STRINGS.
+// Coerce them back to numbers so the UI (e.g. rating.toFixed) works and matches
+// the static data shape. Idempotent for already-numeric static data.
+const toNum = (v) => v == null || v === "" ? v : Number(v);
+export function normalizeProduct(p) {
+  if (!p) return p;
+  return {
+    ...p,
+    price: toNum(p.price),
+    mrp: toNum(p.mrp),
+    rating: toNum(p.rating),
+    reviews: toNum(p.reviews),
+    weight: toNum(p.weight),
+    stock: toNum(p.stock)
+  };
+}
+
 export async function getProducts() {
-  return fetchPublic("products", STATIC_PRODUCTS);
+  const list = await fetchPublic("products", STATIC_PRODUCTS);
+  return list.map(normalizeProduct);
 }
 
 export async function getProduct(slug) {
   const data = await fetchPublic(`products/slug/${encodeURIComponent(slug)}`, null);
-  return data || STATIC_PRODUCTS.find((p) => p.slug === slug) || null;
+  return normalizeProduct(data || STATIC_PRODUCTS.find((p) => p.slug === slug) || null);
 }
 
 export async function getCategories() {

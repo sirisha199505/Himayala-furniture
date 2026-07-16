@@ -8,6 +8,8 @@ export function Rating({
   className
 
 }) {
+  // Tolerate string values (e.g. a BigDecimal rating serialized from the DB).
+  const rating = Number(value) || 0;
   return (
     <div className={cn("flex items-center gap-1.5", className)}>
       <div className="flex items-center">
@@ -17,7 +19,7 @@ export function Rating({
           width={size}
           height={size}
           className={cn(
-            i < Math.round(value) ?
+            i < Math.round(rating) ?
             "fill-bronze text-bronze" :
             "fill-none text-charcoal/25"
           )} />
@@ -25,7 +27,7 @@ export function Rating({
         )}
       </div>
       <span className="text-sm font-medium text-warmbrown">
-        {value.toFixed(1)}
+        {rating.toFixed(1)}
         {reviews !== undefined &&
         <span className="text-muted"> ({reviews})</span>
         }
