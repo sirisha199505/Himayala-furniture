@@ -1,11 +1,13 @@
 "use client";
 
 import * as React from "react";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Lock, Mail, ArrowRight, ShieldCheck } from "lucide-react";
 import { useAdminAuth } from "@/store/admin-auth";
 import { useMounted } from "@/lib/use-mounted";
+import { img, POOL } from "@/data/images";
 import { Logo } from "@/components/layout/logo";
 import { Button } from "@/components/ui/button";
 
@@ -35,30 +37,52 @@ export default function AdminLoginPage() {
 
   return (
     <div className="grid min-h-screen grid-cols-1 lg:grid-cols-2">
-      {/* Brand panel */}
-      <div className="relative hidden flex-col justify-between bg-charcoal p-12 text-white lg:flex">
-        <Logo dark />
-        <div>
-          <h1 className="font-display text-4xl font-bold leading-tight">
+      {/* Brand panel — full-bleed furniture image with elegant overlay */}
+      <div className="relative hidden flex-col justify-between overflow-hidden p-12 text-white lg:flex">
+        <Image
+          src={img(POOL.hero[0], 1600)}
+          alt="Himalayan Furniture Mart interior"
+          fill
+          priority
+          sizes="50vw"
+          className="object-cover" />
+
+        {/* Legibility + brand gradient */}
+        <div className="absolute inset-0 bg-gradient-to-tr from-charcoal via-charcoal/90 to-charcoal/45" />
+        <div className="absolute inset-0 bg-gradient-to-t from-charcoal/80 to-transparent" />
+
+        <div className="relative z-10">
+          <Logo dark />
+        </div>
+
+        <div className="relative z-10">
+          <p className="mb-3 text-xs font-semibold uppercase tracking-[0.2em] text-bronze">
             Admin Console
-          </h1>
-          <p className="mt-3 max-w-sm text-white/70">
-            Manage products, gallery, content and leads for Himalayan Furniture
-            Mart — all in one place.
           </p>
-          <ul className="mt-6 space-y-2 text-sm text-white/70">
-            <li className="flex items-center gap-2">
-              <ShieldCheck size={16} className="text-bronze" /> Role-based access
-            </li>
-            <li className="flex items-center gap-2">
-              <ShieldCheck size={16} className="text-bronze" /> Add gallery images by URL
-            </li>
-            <li className="flex items-center gap-2">
-              <ShieldCheck size={16} className="text-bronze" /> Full content management
-            </li>
+          <h1 className="font-display text-4xl font-bold leading-tight sm:text-5xl">
+            Manage your store,<br />beautifully.
+          </h1>
+          <p className="mt-4 max-w-sm text-white/75">
+            Products, gallery, content and leads for Himalayan Furniture Mart —
+            all in one place.
+          </p>
+          <ul className="mt-8 space-y-3 text-sm text-white/85">
+            {[
+            "Role-based access",
+            "Add gallery images by URL",
+            "Full content management"].
+            map((f) =>
+            <li key={f} className="flex items-center gap-3">
+                <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-white/15 bg-white/10 backdrop-blur">
+                  <ShieldCheck size={15} className="text-bronze" />
+                </span>
+                {f}
+              </li>
+            )}
           </ul>
         </div>
-        <p className="text-xs text-white/40">
+
+        <p className="relative z-10 text-xs text-white/50">
           © 2026 Himalayan Furniture Mart
         </p>
       </div>
