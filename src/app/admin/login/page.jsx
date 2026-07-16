@@ -4,7 +4,7 @@ import * as React from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Lock, Mail, ArrowRight, ShieldCheck } from "lucide-react";
-import { useAdminAuth, DEMO_ACCOUNTS } from "@/store/admin-auth";
+import { useAdminAuth } from "@/store/admin-auth";
 import { useMounted } from "@/lib/use-mounted";
 import { Logo } from "@/components/layout/logo";
 import { Button } from "@/components/ui/button";
@@ -31,13 +31,6 @@ export default function AdminLoginPage() {
     setSubmitting(false);
     if (res.ok) router.replace("/admin");else
     setError(res.error ?? "Login failed");
-  }
-
-  function quickFill(role) {
-    const acc = DEMO_ACCOUNTS.find((a) => a.role === role);
-    setEmail(acc.email);
-    setPassword(acc.password);
-    setError("");
   }
 
   return (
@@ -127,29 +120,6 @@ export default function AdminLoginPage() {
               {submitting ? "Signing in…" : <>Sign In <ArrowRight size={18} /></>}
             </Button>
           </form>
-
-          {/* Quick sign-in */}
-          <div className="mt-6 rounded-2xl border border-border bg-surface p-4">
-            <p className="text-xs font-semibold uppercase tracking-wider text-muted">
-              Quick sign-in
-            </p>
-            <div className="mt-3 flex flex-col gap-2">
-              {DEMO_ACCOUNTS.map((acc) =>
-              <button
-                key={acc.email}
-                type="button"
-                onClick={() => quickFill(acc.role)}
-                className="rounded-lg border border-border px-3 py-2 text-left text-sm hover:border-brand">
-
-                <span className="font-medium text-charcoal">{acc.name}</span>
-                <span className="block text-xs text-muted">{acc.email}</span>
-              </button>
-              )}
-            </div>
-            <p className="mt-3 text-xs text-muted">
-              Additional Admin users can be created under User Management.
-            </p>
-          </div>
 
           <Link href="/" className="mt-6 block text-center text-sm text-muted hover:text-brand">
             ← Back to website

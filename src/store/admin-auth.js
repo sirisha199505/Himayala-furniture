@@ -7,17 +7,6 @@ import { apiLogin } from "@/lib/api";
 // Backend role int -> frontend role key
 const ROLE_STR = { 1: "super", 2: "admin" };
 
-// Quick-fill helper for the login screen. These are real accounts that must
-// exist in the backend (seed with scripts/seed_admin.rb). Passwords are NOT
-// checked on the client anymore — the API validates them.
-export const DEMO_ACCOUNTS = [
-{
-  name: "Super Admin",
-  email: "admin@himalayanfurnituremart.in",
-  password: "admin123",
-  role: "super"
-}];
-
 export const useAdminAuth = create()(
   persist(
     (set) => ({
