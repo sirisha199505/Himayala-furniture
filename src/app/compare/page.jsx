@@ -1,9 +1,11 @@
 "use client";
 
+import * as React from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { GitCompareArrows, X, ArrowRight, Check, Minus } from "lucide-react";
+import { GitCompareArrows, X, ArrowRight, Check, Minus, ShoppingBag } from "lucide-react";
 import { useCompare } from "@/store/wishlist";
+import { useCart } from "@/store/cart";
 import { useCatalog } from "@/components/providers/catalog-provider";
 import { useMounted } from "@/lib/use-mounted";
 import { formatPrice } from "@/lib/utils";
@@ -90,34 +92,41 @@ export default function ComparePage() {
           </Button>
         </div> :
 
-      <div className="mt-8 overflow-x-auto">
-          <table className="w-full min-w-[640px] border-separate border-spacing-0">
+      <div className="mt-8 overflow-x-auto pb-2">
+          <table className="w-full min-w-[680px] table-fixed border-separate border-spacing-0 overflow-hidden rounded-2xl border border-border">
+            <colgroup>
+              <col className="w-40" />
+              {products.map((p) => p && <col key={p.slug} />)}
+            </colgroup>
             <thead>
               <tr>
-                <th className="w-32 align-bottom" />
+                <th className="border-b border-border bg-beige/40 align-bottom" />
                 {products.map(
                 (p) =>
                 p &&
-                <th key={p.slug} className="p-3 align-top">
-                        <div className="relative">
+                <th
+                  key={p.slug}
+                  className="border-b border-l border-border bg-beige/40 p-4 align-top">
+
+                        <div className="relative mx-auto flex max-w-[15rem] flex-col">
                           <button
                       onClick={() => toggle(p.slug)}
                       aria-label={`Remove ${p.name}`}
-                      className="absolute right-1 top-1 z-10 flex h-7 w-7 items-center justify-center rounded-full bg-charcoal/70 text-white hover:bg-brand">
-                      
+                      className="absolute right-1 top-1 z-10 flex h-7 w-7 items-center justify-center rounded-full bg-charcoal/70 text-white transition-colors hover:bg-brand">
+
                             <X size={14} />
                           </button>
-                          <Link href={`/products/${p.slug}`}>
+                          <Link href={`/products/${p.slug}`} className="group">
                             <div className="relative mb-3 aspect-square overflow-hidden rounded-2xl bg-beige">
                               <Image
                           src={p.images[0]}
                           alt={p.name}
                           fill
-                          sizes="200px"
-                          className="object-cover" />
-                        
+                          sizes="240px"
+                          className="object-cover transition-transform duration-500 group-hover:scale-105" />
+
                             </div>
-                            <span className="block text-left font-display text-base font-semibold leading-snug text-charcoal hover:text-brand">
+                            <span className="block text-center font-display text-base font-semibold leading-snug text-charcoal transition-colors group-hover:text-brand">
                               {p.name}
                             </span>
                           </Link>
@@ -129,8 +138,8 @@ export default function ComparePage() {
             </thead>
             <tbody>
               {rows.map((row, ri) =>
-            <tr key={row.label} className={ri % 2 ? "bg-beige/40" : ""}>
-                  <td className="p-3 text-sm font-semibold text-charcoal">
+            <tr key={row.label} className={ri % 2 ? "bg-beige/30" : ""}>
+                  <td className="border-b border-border p-4 text-sm font-semibold text-charcoal">
                     {row.label}
                   </td>
                   {products.map(
@@ -138,8 +147,8 @@ export default function ComparePage() {
                 p &&
                 <td
                   key={p.slug}
-                  className="p-3 text-center text-sm text-warmbrown">
-                  
+                  className="border-b border-l border-border p-4 text-center align-middle text-sm text-warmbrown">
+
                           {row.render(p)}
                         </td>
 
@@ -147,19 +156,22 @@ export default function ComparePage() {
                 </tr>
             )}
               <tr>
-                <td />
+                <td className="p-4" />
                 {products.map(
                 (p) =>
                 p &&
-                <td key={p.slug} className="p-3">
-                        <EnquiryDialog
-                    productName={p.name}
-                    trigger={
-                    <Button size="sm" className="w-full">
-                              Enquire
-                            </Button>
-                    } />
-                  
+                <td key={p.slug} className="border-l border-border p-4 align-middle">
+                        <div className="mx-auto flex max-w-[15rem] flex-col gap-2">
+                          <AddToCartButton product={p} />
+                          <EnquiryDialog
+                      productName={p.name}
+                      trigger={
+                      <Button size="sm" variant="outline" className="w-full">
+                                Enquire
+                              </Button>
+                      } />
+
+                        </div>
                       </td>
 
               )}
@@ -169,5 +181,33 @@ export default function ComparePage() {
         </div>
       }
     </Container>);
+
+}
+
+function AddToCartButton({ product }) {
+  const cart = useCart();
+  const [added, setAdded] = React.useState(false);
+  const purchasable = product.price > 0 && product.inStock !== false;
+
+  if (!purchasable) {
+    return (
+      <Button size="sm" className="w-full" disabled>
+        Made to Order
+      </Button>);
+
+  }
+
+  function addToCart() {
+    cart.add(product.slug, 1);
+    setAdded(true);
+    setTimeout(() => setAdded(false), 1800);
+  }
+
+  return (
+    <Button size="sm" className="w-full" onClick={addToCart}>
+      {added ?
+      <><Check size={16} /> Added</> :
+      <><ShoppingBag size={16} /> Add to Cart</>}
+    </Button>);
 
 }

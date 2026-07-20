@@ -207,13 +207,14 @@ export default function CheckoutPage() {
               {/* Pincode drives city/state via India Post lookup */}
               <div>
                 <label htmlFor="pincode" className="mb-1.5 block text-sm font-medium text-charcoal">
-                  Pincode
+                  Pincode <span className="text-brand">*</span>
                 </label>
                 <input
                   id="pincode"
                   name="pincode"
                   type="text"
                   inputMode="numeric"
+                  required
                   maxLength={6}
                   value={form.pincode}
                   onChange={(e) => set("pincode", e.target.value.replace(/\D/g, ""))}
@@ -315,7 +316,7 @@ function Field({ label, name, type = "text", required = true, form, set, classNa
   return (
     <div className={className}>
       <label htmlFor={name} className="mb-1.5 block text-sm font-medium text-charcoal">
-        {label}
+        {label} {required && <span className="text-brand">*</span>}
       </label>
       <input
         id={name}

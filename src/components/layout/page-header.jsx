@@ -1,19 +1,42 @@
 import Link from "next/link";
 import { ChevronRight } from "lucide-react";
+import { cn } from "@/lib/utils";
 import { Container } from "@/components/layout/container";
 import { Reveal } from "@/components/motion/reveal";
 
-export function Breadcrumbs({ items }) {
+// `tone="light"` renders readable breadcrumbs over dark hero images.
+export function Breadcrumbs({ items, tone = "dark" }) {
+  const light = tone === "light";
   return (
     <nav aria-label="Breadcrumb">
-      <ol className="flex flex-wrap items-center gap-1.5 text-sm text-muted">
+      <ol
+        className={cn(
+          "flex flex-wrap items-center gap-1.5 text-sm",
+          light ?
+          "text-white/80 [text-shadow:0_1px_4px_rgba(0,0,0,0.6)]" :
+          "text-muted"
+        )}>
+
         {items.map((c, i) =>
         <li key={c.href} className="flex items-center gap-1.5">
             {i > 0 && <ChevronRight size={14} className="opacity-50" />}
             {i === items.length - 1 ?
-          <span className="font-medium text-charcoal">{c.name}</span> :
+          <span
+            className={cn(
+              "font-medium",
+              light ? "text-white" : "text-charcoal"
+            )}>
 
-          <Link href={c.href} className="transition-colors hover:text-brand">
+                {c.name}
+              </span> :
+
+          <Link
+            href={c.href}
+            className={cn(
+              "transition-colors",
+              light ? "hover:text-white" : "hover:text-brand"
+            )}>
+
                 {c.name}
               </Link>
           }

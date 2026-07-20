@@ -15,7 +15,7 @@ import { useWishlist, useCompare } from "@/store/wishlist";
 import { useCart } from "@/store/cart";
 import { useMounted } from "@/lib/use-mounted";
 
-export function ProductCard({ product }) {
+export function ProductCard({ product, removeFromWishlistOnAdd = false }) {
   const mounted = useMounted();
   const [imgError, setImgError] = React.useState(false);
   const wishlist = useWishlist();
@@ -32,6 +32,10 @@ export function ProductCard({ product }) {
 
   function addToCart() {
     cart.add(product.slug, 1);
+    // On the wishlist page, moving an item to the cart should remove it here.
+    if (removeFromWishlistOnAdd && wishlist.has(product.slug)) {
+      wishlist.remove(product.slug);
+    }
     setAdded(true);
     setTimeout(() => setAdded(false), 1800);
   }

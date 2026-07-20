@@ -15,6 +15,7 @@ import {
 import { DEFAULT_STORE_CONFIG, telLink, whatsappLink } from "@/lib/store-config";
 import { Logo } from "@/components/layout/logo";
 import { Button } from "@/components/ui/button";
+import { EnquiryDialog } from "@/components/product/enquiry-dialog";
 import { useCatalog } from "@/components/providers/catalog-provider";
 
 const company = [
@@ -47,9 +48,13 @@ export function Footer({ config = DEFAULT_STORE_CONFIG }) {
             <Button asChild size="lg">
               <Link href="/contact">Contact Us</Link>
             </Button>
-            <Button asChild size="lg" variant="light">
-              <Link href="/contact">Book Consultation</Link>
-            </Button>
+            <EnquiryDialog
+              intent="Consultation"
+              trigger={
+              <Button size="lg" variant="light">
+                  Book Consultation
+                </Button>
+              } />
           </div>
         </div>
       </div>

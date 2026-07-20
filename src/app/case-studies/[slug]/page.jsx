@@ -66,6 +66,7 @@ export default async function CaseStudyPage({
         <div className="absolute inset-0 hero-overlay" />
         <Container className="relative flex h-full flex-col justify-end pb-12">
           <Breadcrumbs
+            tone="light"
             items={[
             { name: "Home", href: "/" },
             { name: "Case Studies", href: "/case-studies" },

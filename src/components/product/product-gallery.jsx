@@ -3,13 +3,14 @@
 import * as React from "react";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
+import { useProductMedia } from "@/components/product/product-media";
 
 export function ProductGallery({
   images,
   name
 
 }) {
-  const [active, setActive] = React.useState(0);
+  const { active, setActive } = useProductMedia();
   const [zoom, setZoom] = React.useState(false);
   const [pos, setPos] = React.useState({ x: 50, y: 50 });
 

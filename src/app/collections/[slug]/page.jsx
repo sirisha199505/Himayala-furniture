@@ -65,6 +65,7 @@ export default async function CollectionPage({
         <div className="absolute inset-0 hero-overlay" />
         <Container className="relative flex h-full flex-col justify-end pb-10">
           <Breadcrumbs
+            tone="light"
             items={[
             { name: "Home", href: "/" },
             { name: "Collections", href: "/collections" },

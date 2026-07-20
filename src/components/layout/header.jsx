@@ -198,8 +198,17 @@ export function Header({ config = DEFAULT_STORE_CONFIG }) {
                   </div>
                   <Link
                   href="/products"
+                  onClick={(e) => {
+                    setMegaOpen(false);
+                    // Already on the shop page: force a clean refresh so every
+                    // filter and dropdown resets back to the full catalogue.
+                    if (pathname === "/products") {
+                      e.preventDefault();
+                      window.location.href = "/products";
+                    }
+                  }}
                   className="mt-3 inline-flex items-center gap-1 text-sm font-semibold text-brand hover:gap-2">
-                  
+
                     View all products <ChevronRight size={16} />
                   </Link>
                 </div>

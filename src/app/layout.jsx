@@ -9,6 +9,7 @@ import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
 import { FloatingActions } from "@/components/layout/floating-actions";
 import { CompareBar } from "@/components/layout/compare-bar";
+import { Toaster } from "@/components/ui/toaster";
 import { CatalogProvider } from "@/components/providers/catalog-provider";
 
 const playfair = Playfair_Display({
@@ -110,6 +111,7 @@ export default async function RootLayout({
           <Footer config={config} />
           <FloatingActions config={config} />
           <CompareBar />
+          <Toaster />
         </CatalogProvider>
       </body>
     </html>);

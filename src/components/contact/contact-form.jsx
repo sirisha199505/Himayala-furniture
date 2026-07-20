@@ -83,7 +83,7 @@ export function ContactForm({ whatsappHref }) {
         </div>
         <div>
           <label htmlFor="message" className="mb-1.5 block text-sm font-medium text-charcoal">
-            Message
+            Message <span className="text-brand">*</span>
           </label>
           <textarea
             id="message"
@@ -126,7 +126,7 @@ function Field({
   return (
     <div>
       <label htmlFor={name} className="mb-1.5 block text-sm font-medium text-charcoal">
-        {label}
+        {label} {required && <span className="text-brand">*</span>}
       </label>
       <input
         id={name}

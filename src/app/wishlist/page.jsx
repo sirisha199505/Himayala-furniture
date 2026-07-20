@@ -65,7 +65,9 @@ export default function WishlistPage() {
         </div> :
 
       <div className="mt-8 grid grid-cols-2 gap-4 sm:gap-5 lg:grid-cols-4">
-          {products.map((p) => p && <ProductCard key={p.slug} product={p} />)}
+          {products.map(
+          (p) => p && <ProductCard key={p.slug} product={p} removeFromWishlistOnAdd />
+        )}
         </div>
       }
     </Container>);

@@ -99,19 +99,24 @@ export function EnquiryDialog({
                 <label
                 htmlFor="message"
                 className="mb-1.5 block text-sm font-medium text-charcoal">
-                
-                  Message
+
+                  Message <span className="text-brand">*</span>
                 </label>
                 <textarea
                 id="message"
                 name="message"
                 rows={3}
+                required
                 defaultValue={
                 productName ? `I'm interested in the ${productName}.` : ""
                 }
                 className="w-full rounded-xl border border-border bg-ivory px-4 py-3 text-sm outline-none transition-colors focus:border-brand"
-                placeholder="How can we help?" />
-              
+                placeholder={
+                intent === "Consultation" ?
+                "Tell us about your space, requirements and preferred timing…" :
+                "How can we help?"
+                } />
+
               </div>
               <Button
               type="submit"
@@ -124,7 +129,11 @@ export function EnquiryDialog({
                     <Loader2 className="animate-spin" size={18} /> Sending…
                   </> :
 
-              `Submit ${intent === "Quote Request" ? "Quote Request" : "Enquiry"}`
+              intent === "Quote Request" ?
+              "Submit Quote Request" :
+              intent === "Consultation" ?
+              "Book Consultation" :
+              "Submit Enquiry"
               }
               </Button>
               <p className="text-center text-xs text-muted">
@@ -151,8 +160,8 @@ function Field({
       <label
         htmlFor={name}
         className="mb-1.5 block text-sm font-medium text-charcoal">
-        
-        {label}
+
+        {label} {required && <span className="text-brand">*</span>}
       </label>
       <input
         id={name}

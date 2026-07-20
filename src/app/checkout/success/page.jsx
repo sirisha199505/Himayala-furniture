@@ -81,9 +81,12 @@ function SuccessInner() {
                 <span className="rounded-full bg-beige px-2.5 py-1 font-medium text-warmbrown">
                   {METHOD_LABEL[order.payment_method] || order.payment_method}
                 </span>
+                {/* Skip the status badge for COD — "Cash on Delivery" already says it. */}
+                {order.payment_status !== "cod_pending" &&
                 <span className="rounded-full bg-brand/10 px-2.5 py-1 font-medium text-brand">
                   {PAY_LABEL[order.payment_status] || order.payment_status}
                 </span>
+                }
               </div>
             </div>
 

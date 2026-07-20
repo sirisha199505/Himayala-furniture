@@ -20,6 +20,8 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Rating } from "@/components/ui/rating";
 import { ProductGallery } from "@/components/product/product-gallery";
+import { ProductMediaProvider } from "@/components/product/product-media";
+import { FinishSelector } from "@/components/product/finish-selector";
 import { ProductActions } from "@/components/product/product-actions";
 import { ProductSlider } from "@/components/product/product-slider";
 import { EnquiryDialog } from "@/components/product/enquiry-dialog";
@@ -104,6 +106,7 @@ export default async function ProductPage({
       </Container>
 
       <Container className="pb-16">
+        <ProductMediaProvider imageCount={product.images.length}>
         <div className="grid grid-cols-1 gap-10 lg:grid-cols-2 lg:gap-14">
           {/* Gallery */}
           <div className="lg:sticky lg:top-28 lg:self-start">
@@ -165,26 +168,7 @@ export default async function ProductPage({
             </p>
 
             {/* Colours */}
-            <div className="mt-6">
-              <p className="mb-2 text-sm font-semibold text-charcoal">
-                Available Finishes
-              </p>
-              <div className="flex flex-wrap gap-2.5">
-                {product.colors.map((c) =>
-                <span
-                  key={c.name}
-                  title={c.name}
-                  className="flex items-center gap-2 rounded-full border border-border bg-surface py-1.5 pl-1.5 pr-3 text-sm">
-                  
-                    <span
-                    className="h-6 w-6 rounded-full border border-black/10"
-                    style={{ backgroundColor: c.hex }} />
-                  
-                    {c.name}
-                  </span>
-                )}
-              </div>
-            </div>
+            <FinishSelector colors={product.colors} />
 
             {/* Quick specs */}
             <dl className="mt-6 grid grid-cols-2 gap-3">
@@ -252,6 +236,7 @@ export default async function ProductPage({
             </div>
           </div>
         </div>
+        </ProductMediaProvider>
 
         {/* Detail sections */}
         <div className="mt-16 grid grid-cols-1 gap-10 lg:grid-cols-3">

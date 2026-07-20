@@ -17,6 +17,7 @@ export function ProductsExplorer() {
   const params = useSearchParams();
   const initialCategory = params.get("category");
   const initialCollection = params.get("collection");
+  const paramsKey = params.toString();
 
   const [query, setQuery] = React.useState("");
   const [cats, setCats] = React.useState(
@@ -32,13 +33,21 @@ export function ProductsExplorer() {
   const [visible, setVisible] = React.useState(PAGE_SIZE);
   const [drawerOpen, setDrawerOpen] = React.useState(false);
 
+  // Re-sync every filter with the URL whenever it changes. Navigating to
+  // /products (e.g. "View all products") clears the query string, which resets
+  // all filters and dropdowns back to their defaults.
   React.useEffect(() => {
-    if (initialCategory) setCats([initialCategory]);
-  }, [initialCategory]);
-
-  React.useEffect(() => {
-    if (initialCollection) setColls([initialCollection]);
-  }, [initialCollection]);
+    setQuery("");
+    setCats(initialCategory ? [initialCategory] : []);
+    setColls(initialCollection ? [initialCollection] : []);
+    setMats([]);
+    setColors([]);
+    setMaxPrice(priceRange.max);
+    setSort("featured");
+    setDrawerOpen(false);
+    setVisible(PAGE_SIZE);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [paramsKey]);
 
   const toggle =
   (setter) =>
@@ -207,8 +216,18 @@ export function ProductsExplorer() {
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               placeholder="Search furniture…"
-              className="w-full rounded-full border border-border bg-surface py-3 pl-11 pr-4 text-sm outline-none transition-colors focus:border-brand" />
-            
+              className="w-full rounded-full border border-border bg-surface py-3 pl-11 pr-11 text-sm outline-none transition-colors focus:border-brand" />
+
+            {query &&
+            <button
+              type="button"
+              onClick={() => setQuery("")}
+              aria-label="Clear search"
+              className="absolute right-3 top-1/2 flex h-7 w-7 -translate-y-1/2 items-center justify-center rounded-full text-muted transition-colors hover:bg-beige hover:text-charcoal">
+
+                <X size={16} />
+              </button>
+            }
           </div>
           <div className="flex items-center gap-3">
             <button
