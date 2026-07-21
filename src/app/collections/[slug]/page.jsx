@@ -1,18 +1,19 @@
 
 import { notFound } from "next/navigation";
 import Image from "next/image";
-import { collections, collectionBySlug, collectionCategories } from "@/data/collections";
-import { getProducts } from "@/lib/catalog";
+import { getProducts, getCollection } from "@/lib/catalog";
 import { Container } from "@/components/layout/container";
 import { Breadcrumbs } from "@/components/layout/page-header";
 import { ProductCard } from "@/components/product/product-card";
 import { JsonLd } from "@/components/seo/json-ld";
 import { breadcrumbLd, pageMeta } from "@/lib/seo";
 
+// Collections are DB-driven; generate on demand and revalidate.
 export function generateStaticParams() {
-  return collections.map((c) => ({ slug: c.slug }));
+  return [];
 }
 
+export const dynamicParams = true;
 export const revalidate = 30;
 
 export async function generateMetadata({
@@ -20,7 +21,7 @@ export async function generateMetadata({
 
 }) {
   const { slug } = await params;
-  const col = collectionBySlug(slug);
+  const col = await getCollection(slug);
   if (!col) return { title: "Collection not found" };
   return pageMeta({
     title: col.name,
@@ -35,10 +36,10 @@ export default async function CollectionPage({
 
 }) {
   const { slug } = await params;
-  const col = collectionBySlug(slug);
+  const col = await getCollection(slug);
   if (!col) notFound();
 
-  const cats = collectionCategories[col.slug] ?? [];
+  const cats = col.categorySlugs ?? [];
   const products = await getProducts();
   const items = products.filter((p) => cats.includes(p.category));
 

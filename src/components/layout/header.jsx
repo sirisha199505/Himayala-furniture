@@ -18,7 +18,6 @@ import {
 import { cn } from "@/lib/utils";
 import { MAIN_NAV } from "@/lib/site";
 import { DEFAULT_STORE_CONFIG, telLink, whatsappLink } from "@/lib/store-config";
-import { collections } from "@/data/collections";
 import { Logo } from "@/components/layout/logo";
 import { Button } from "@/components/ui/button";
 import { EnquiryDialog } from "@/components/product/enquiry-dialog";
