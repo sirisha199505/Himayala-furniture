@@ -169,9 +169,13 @@ export function EntityManager({
       {/* Delete confirm */}
       <Dialog open={!!confirmId} onOpenChange={(o) => !o && setConfirmId(null)}>
         <DialogContent className="max-w-sm">
-          <DialogTitle className="text-xl font-semibold">Delete {singular}?</DialogTitle>
+          <DialogTitle className="text-xl font-semibold">
+            Delete this {singular.toLowerCase()}?
+          </DialogTitle>
           <p className="mt-2 text-warmbrown/80">
-            This will permanently remove the item from the backend. This cannot be undone.
+            This {singular.toLowerCase()} will be removed from your store and will no
+            longer be visible to customers. You can't undo this, so please make sure
+            before you continue.
           </p>
           <div className="mt-5 flex gap-3">
             <Button variant="outline" className="flex-1" onClick={() => setConfirmId(null)}>
@@ -229,7 +233,15 @@ function EntityForm({
     const out = {};
     for (const f of fields) {
       const v = values[f.name];
-      if (f.type === "number") out[f.name] = Number(v) || 0;else
+      if (f.type === "number") {
+        // Clamp within [min, max] so negatives / out-of-range never get saved,
+        // even if the browser's native validation is bypassed. min defaults to 0.
+        let n = Number(v) || 0;
+        const min = f.min ?? 0;
+        if (n < min) n = min;
+        if (f.max != null && n > f.max) n = f.max;
+        out[f.name] = n;
+      } else
       if (f.type === "tags")
       out[f.name] = String(v ?? "").
       split(",").
@@ -297,6 +309,9 @@ function EntityForm({
             <input
               type={f.type === "number" ? "number" : "text"}
               required={f.required}
+              min={f.type === "number" ? f.min ?? 0 : undefined}
+              max={f.type === "number" ? f.max : undefined}
+              step={f.type === "number" ? f.step ?? "any" : undefined}
               value={String(values[f.name] ?? "")}
               onChange={(e) => set(f.name, e.target.value)}
               placeholder={f.placeholder}

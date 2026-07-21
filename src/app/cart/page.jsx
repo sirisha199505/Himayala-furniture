@@ -29,7 +29,7 @@ export default function CartPage() {
 
   if (lines.length === 0) {
     return (
-      <Container className="py-16 sm:py-24">
+      <Container className="flex min-h-[70vh] items-center justify-center py-16 sm:py-24">
         <div className="mx-auto max-w-md text-center">
           <div className="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-full bg-beige text-warmbrown">
             <ShoppingBag size={30} />
