@@ -48,12 +48,31 @@ export default function AdminAnalytics() {
         )}
       </div>
 
-      <div className="rounded-2xl border border-border bg-surface p-5">
-        <div className="flex items-center justify-between">
-          <span className="text-sm text-muted">Total revenue (from orders)</span>
-          <span className="font-display text-xl font-bold text-charcoal">
+      <div className="grid gap-4 sm:grid-cols-3">
+        <div className="rounded-2xl border border-border bg-surface p-5">
+          <span className="text-sm text-muted">Booked revenue</span>
+          <div className="mt-1 font-display text-xl font-bold text-charcoal">
             {summary ? formatPrice(summary.revenue) : "—"}
-          </span>
+          </div>
+          <p className="mt-1 text-xs text-muted">All orders except cancelled.</p>
+        </div>
+        <div className="rounded-2xl border border-border bg-surface p-5">
+          <span className="text-sm text-muted">Delivered revenue</span>
+          <div className="mt-1 font-display text-xl font-bold text-success">
+            {summary ? formatPrice(summary.revenue_delivered ?? 0) : "—"}
+          </div>
+          <p className="mt-1 text-xs text-muted">
+            {summary ? `${summary.orders_delivered ?? 0} delivered` : "—"}
+          </p>
+        </div>
+        <div className="rounded-2xl border border-border bg-surface p-5">
+          <span className="text-sm text-muted">Cancelled</span>
+          <div className="mt-1 font-display text-xl font-bold text-muted">
+            {summary ? formatPrice(summary.revenue_cancelled ?? 0) : "—"}
+          </div>
+          <p className="mt-1 text-xs text-muted">
+            {summary ? `${summary.orders_cancelled ?? 0} cancelled · excluded` : "—"}
+          </p>
         </div>
       </div>
 

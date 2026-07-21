@@ -8,7 +8,7 @@ export default function AdminLeads() {
       entity="leads"
       title="Leads"
       singular="Lead"
-      description="Track and manage customer enquiries. (Super Admin only)"
+      description="Leads are enquiries customers submit through the website — the Enquire Now, Book Consultation, Request Quote, Contact and newsletter forms all land here. Follow up with each person and track their status (New → Contacted → Quoted → Won/Lost)."
       columns={[
       { key: "name", label: "Name" },
       { key: "phone", label: "Phone" },

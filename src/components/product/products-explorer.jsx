@@ -262,6 +262,23 @@ export function ProductsExplorer() {
           </div>
         </div>
 
+        {/* Category intro — surfaces the description set in admin when the
+            shopper is viewing a single category. */}
+        {cats.length === 1 && colls.length === 0 && (() => {
+          const cat = categories.find((c) => c.slug === cats[0]);
+          if (!cat?.description) return null;
+          return (
+            <div className="mb-6 rounded-2xl border border-border bg-beige/40 p-5">
+              <h2 className="font-display text-xl font-semibold text-charcoal">
+                {cat.name}
+              </h2>
+              <p className="mt-1 text-sm leading-relaxed text-warmbrown/80">
+                {cat.description}
+              </p>
+            </div>);
+
+        })()}
+
         <p className="mb-5 text-sm text-muted">
           Showing{" "}
           <span className="font-semibold text-charcoal">

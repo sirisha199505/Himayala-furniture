@@ -11,6 +11,7 @@ import {
   Youtube } from
 "lucide-react";
 import { getStoreConfig, telLink, whatsappLink } from "@/lib/store-config";
+import { getLocations } from "@/lib/catalog";
 import { Container } from "@/components/layout/container";
 import { ContactForm } from "@/components/contact/contact-form";
 import { JsonLd } from "@/components/seo/json-ld";
@@ -24,23 +25,11 @@ export const metadata = pageMeta({
   path: "/contact"
 });
 
-const branches = [
-{
-  city: "Hyderabad (Flagship)",
-  address:
-  "H, 490/25, opp. Hotel City Diamond, Huda Colony, Asif Nagar, Hyderabad, Telangana 500028"
-},
-{
-  city: "Bengaluru",
-  address: "Experience Centre, Bengaluru, Karnataka"
-},
-{
-  city: "Chennai",
-  address: "Experience Centre, Chennai, Tamil Nadu"
-}];
+export const revalidate = 30;
 
 export default async function ContactPage() {
   const config = await getStoreConfig();
+  const branches = await getLocations();
   return (
     <>
       <JsonLd
@@ -153,12 +142,17 @@ export default async function ContactPage() {
                 Our Locations
               </h3>
               <ul className="mt-4 space-y-4">
-                {branches.map((b) =>
-                <li key={b.city} className="flex gap-3">
+                {branches.map((b, i) =>
+                <li key={b.id ?? b.name ?? b.city ?? i} className="flex gap-3">
                     <MapPin size={18} className="mt-0.5 shrink-0 text-brand" />
                     <div>
-                      <p className="font-semibold text-charcoal">{b.city}</p>
+                      <p className="font-semibold text-charcoal">{b.name ?? b.city}</p>
                       <p className="text-sm text-warmbrown/80">{b.address}</p>
+                      {(b.phone || b.hours) &&
+                    <p className="mt-0.5 text-xs text-muted">
+                          {[b.phone, b.hours].filter(Boolean).join(" · ")}
+                        </p>
+                    }
                     </div>
                   </li>
                 )}

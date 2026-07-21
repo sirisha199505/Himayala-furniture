@@ -4,10 +4,11 @@ const nextConfig = {
   poweredByHeader: false,
   images: {
     formats: ["image/avif", "image/webp"],
+    // Allow images from any host so admins can paste product/gallery image URLs
+    // from any source (device uploads use data: URLs and bypass this entirely).
     remotePatterns: [
-      { protocol: "https", hostname: "images.unsplash.com" },
-      { protocol: "https", hostname: "assets.zyrosite.com" },
-      { protocol: "https", hostname: "plus.unsplash.com" },
+      { protocol: "https", hostname: "**" },
+      { protocol: "http", hostname: "**" },
     ],
   },
   experimental: {
