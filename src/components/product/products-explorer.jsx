@@ -184,9 +184,9 @@ export function ProductsExplorer() {
     </div>;
 
   return (
-    <div className="grid grid-cols-1 gap-8 lg:grid-cols-12">
-      {/* Sidebar (desktop) */}
-      <aside className="hidden lg:col-span-3 lg:block">
+    <div className="grid grid-cols-1 gap-8 md:grid-cols-12">
+      {/* Sidebar (tablet + desktop) */}
+      <aside className="hidden md:col-span-4 md:block lg:col-span-3">
         <div className="sticky top-28 rounded-2xl border border-border bg-surface p-6">
           <div className="mb-5 flex items-center justify-between">
             <h2 className="font-display text-lg font-semibold">Filters</h2>
@@ -204,7 +204,7 @@ export function ProductsExplorer() {
       </aside>
 
       {/* Main */}
-      <div className="lg:col-span-9">
+      <div className="md:col-span-8 lg:col-span-9">
         {/* Toolbar */}
         <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center">
           <div className="relative flex-1">
@@ -232,7 +232,7 @@ export function ProductsExplorer() {
           <div className="flex items-center gap-3">
             <button
               onClick={() => setDrawerOpen(true)}
-              className="flex items-center gap-2 rounded-full border border-border bg-surface px-4 py-3 text-sm font-medium lg:hidden">
+              className="flex items-center gap-2 rounded-full border border-border bg-surface px-4 py-3 text-sm font-medium md:hidden">
               
               <SlidersHorizontal size={16} /> Filters
               {activeCount > 0 &&
@@ -311,14 +311,14 @@ export function ProductsExplorer() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={() => setDrawerOpen(false)}
-            className="fixed inset-0 z-[80] bg-charcoal/60 lg:hidden" />
+            className="fixed inset-0 z-[80] bg-charcoal/60 md:hidden" />
           
             <motion.div
             initial={{ y: "100%" }}
             animate={{ y: 0 }}
             exit={{ y: "100%" }}
             transition={{ type: "tween", ease: [0.22, 1, 0.36, 1] }}
-            className="fixed inset-x-0 bottom-0 z-[90] max-h-[85vh] overflow-y-auto rounded-t-3xl bg-surface p-6 lg:hidden">
+            className="fixed inset-x-0 bottom-0 z-[90] max-h-[85vh] overflow-y-auto rounded-t-3xl bg-surface p-6 md:hidden">
             
               <div className="mb-5 flex items-center justify-between">
                 <h2 className="font-display text-xl font-semibold">Filters</h2>

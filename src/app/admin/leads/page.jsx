@@ -12,8 +12,15 @@ export default function AdminLeads() {
       columns={[
       { key: "name", label: "Name" },
       { key: "phone", label: "Phone" },
-      { key: "product", label: "Product" },
-      { key: "city", label: "City" },
+      { key: "email", label: "Email" },
+      { key: "product", label: "Interest" },
+      {
+        key: "message",
+        label: "Message",
+        render: (r) =>
+        <span className="line-clamp-2 text-charcoal">{r.message || "—"}</span>
+
+      },
       {
         key: "status",
         label: "Status",
@@ -38,7 +45,9 @@ export default function AdminLeads() {
       fields={[
       { name: "name", label: "Name", required: true },
       { name: "phone", label: "Phone" },
-      { name: "product", label: "Product of Interest", full: true },
+      { name: "email", label: "Email", type: "email" },
+      { name: "product", label: "Product / Interest", full: true },
+      { name: "message", label: "Message", type: "textarea", full: true },
       { name: "city", label: "City" },
       { name: "date", label: "Date", placeholder: "2026-06-23" },
       {

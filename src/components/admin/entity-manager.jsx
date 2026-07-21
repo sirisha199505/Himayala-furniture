@@ -18,7 +18,8 @@ export function EntityManager({
   description,
   columns,
   fields,
-  singular
+  singular,
+  canCreate = true
 
 }) {
   const mounted = useMounted();
@@ -60,9 +61,11 @@ export function EntityManager({
 
             <RotateCcw size={15} className={isLoading ? "animate-spin" : ""} /> Refresh
           </button>
+          {canCreate &&
           <Button onClick={() => setCreating(true)}>
             <Plus size={18} /> Add {singular}
           </Button>
+          }
         </div>
       </div>
 
@@ -137,8 +140,7 @@ export function EntityManager({
       </div>
 
       <p className="text-xs text-muted">
-        {filtered.length} {filtered.length === 1 ? singular.toLowerCase() : title.toLowerCase()} ·
-        Saved to the Himalayan Furniture Mart backend.
+        {filtered.length} {filtered.length === 1 ? singular.toLowerCase() : title.toLowerCase()}
       </p>
 
       {/* Create / Edit dialog */}
@@ -225,6 +227,8 @@ function EntityForm({
         const arr = Array.isArray(raw) ? raw : raw ? [raw] : [];
         init[f.name] = arr.filter(Boolean);
       } else
+      if (f.type === "boolean")
+      init[f.name] = raw === true || raw === "true" || raw === "t" || raw === "Yes" || raw === 1;else
       if (f.type === "tags") init[f.name] = Array.isArray(raw) ? raw.join(", ") : raw ?? "";else
       init[f.name] = raw ?? "";
     }
@@ -247,6 +251,7 @@ function EntityForm({
   function validate() {
     const errs = {};
     for (const f of fields) {
+      if (f.readOnly) continue; // not user-editable → nothing to validate
       const raw = values[f.name];
 
       if (f.type === "gallery") {
@@ -298,6 +303,8 @@ function EntityForm({
         if (f.max != null && n > f.max) n = f.max;
         out[f.name] = n;
       } else
+      if (f.type === "boolean")
+      out[f.name] = v === true;else
       if (f.type === "gallery")
       out[f.name] = (Array.isArray(v) ? v : []).filter(Boolean);else
       if (f.type === "tags")
@@ -333,9 +340,26 @@ function EntityForm({
           {fields.map((f) =>
           <div key={f.name} className={f.full || f.type === "textarea" ? "sm:col-span-2" : ""}>
               <label className="mb-1.5 block text-sm font-medium text-charcoal">
-                {f.label} {f.required && <span className="text-brand">*</span>}
+                {f.label} {f.required && !f.readOnly && <span className="text-brand">*</span>}
               </label>
-              {f.type === "textarea" ?
+              {f.readOnly ?
+            <div className="w-full rounded-xl border border-border bg-beige/40 px-4 py-2.5 text-sm text-warmbrown">
+                  {(() => {
+                const v = values[f.name];
+                if (Array.isArray(v)) return v.length ? v.join(", ") : "—";
+                return v !== undefined && v !== null && v !== "" ? String(v) : "—";
+              })()}
+                </div> :
+            f.type === "boolean" ?
+            <select
+              value={values[f.name] ? "Yes" : "No"}
+              onChange={(e) => set(f.name, e.target.value === "Yes")}
+              className="w-full rounded-xl border border-border bg-ivory px-4 py-2.5 text-sm outline-none focus:border-brand">
+
+                  <option value="No">No</option>
+                  <option value="Yes">Yes</option>
+                </select> :
+            f.type === "textarea" ?
             <textarea
               rows={4}
               required={f.required}

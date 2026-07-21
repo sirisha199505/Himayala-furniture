@@ -21,6 +21,7 @@ import { DEFAULT_STORE_CONFIG, telLink, whatsappLink } from "@/lib/store-config"
 import { collections } from "@/data/collections";
 import { Logo } from "@/components/layout/logo";
 import { Button } from "@/components/ui/button";
+import { EnquiryDialog } from "@/components/product/enquiry-dialog";
 import { useWishlist, useCompare } from "@/store/wishlist";
 import { useCart, cartCount } from "@/store/cart";
 import { useCatalog } from "@/components/providers/catalog-provider";
@@ -148,11 +149,13 @@ export function Header({ config = DEFAULT_STORE_CONFIG }) {
             <IconLink href="/cart" label="Cart" count={mounted ? cartQty : 0}>
               <ShoppingBag size={19} />
             </IconLink>
-            <Button asChild size="sm" className="ml-1 hidden sm:inline-flex">
-              <a href={whatsappLink(config)} target="_blank" rel="noopener noreferrer">
-                Enquire
-              </a>
-            </Button>
+            <EnquiryDialog
+              trigger={
+              <Button size="sm" className="ml-1 hidden sm:inline-flex">
+                  Enquire
+                </Button>
+              } />
+
             <button
               className="ml-0.5 flex h-10 w-10 items-center justify-center rounded-full text-charcoal hover:bg-beige lg:hidden"
               onClick={() => setMobileOpen(true)}

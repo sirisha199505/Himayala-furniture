@@ -1,5 +1,6 @@
 "use client";
 
+import * as React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
@@ -10,9 +11,12 @@ import {
   Facebook,
   Youtube,
   Send,
-  ArrowRight } from
+  ArrowRight,
+  Loader2,
+  Check } from
 "lucide-react";
 import { DEFAULT_STORE_CONFIG, telLink, whatsappLink } from "@/lib/store-config";
+import { createEnquiry } from "@/lib/api";
 import { Logo } from "@/components/layout/logo";
 import { Button } from "@/components/ui/button";
 import { EnquiryDialog } from "@/components/product/enquiry-dialog";
@@ -147,28 +151,7 @@ export function Footer({ config = DEFAULT_STORE_CONFIG }) {
               {config.address.full}
             </li>
           </ul>
-          <form
-            className="mt-5"
-            onSubmit={(e) => e.preventDefault()}
-            aria-label="Newsletter signup">
-            
-            <label className="text-xs text-white/50">Join our newsletter</label>
-            <div className="mt-2 flex overflow-hidden rounded-full border border-white/15 bg-white/5">
-              <input
-                type="email"
-                required
-                placeholder="Email address"
-                className="w-full bg-transparent px-4 py-2.5 text-sm text-white placeholder:text-white/40 focus:outline-none" />
-              
-              <button
-                type="submit"
-                aria-label="Subscribe"
-                className="flex items-center justify-center bg-brand px-4 text-white transition-colors hover:bg-brand-dark">
-                
-                <ArrowRight size={18} />
-              </button>
-            </div>
-          </form>
+          <NewsletterForm />
         </div>
       </div>
 
@@ -186,6 +169,79 @@ export function Footer({ config = DEFAULT_STORE_CONFIG }) {
         </div>
       </div>
     </footer>);
+
+}
+
+function NewsletterForm() {
+  const [email, setEmail] = React.useState("");
+  const [status, setStatus] = React.useState("idle"); // idle | loading | done | error
+
+  async function onSubmit(e) {
+    e.preventDefault();
+    const value = email.trim();
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
+      setStatus("error");
+      return;
+    }
+    setStatus("loading");
+    try {
+      await createEnquiry({
+        name: value,
+        email: value,
+        product: "Newsletter Signup",
+        message: "Subscribed to the newsletter from the website footer."
+      });
+      setStatus("done");
+      setEmail("");
+    } catch (err) {
+      console.error("Newsletter signup failed:", err);
+      setStatus("error");
+    }
+  }
+
+  if (status === "done") {
+    return (
+      <div className="mt-5 flex items-center gap-2 rounded-full border border-success/40 bg-success/10 px-4 py-2.5 text-sm text-white">
+        <Check size={16} className="text-success" /> Thanks for subscribing!
+      </div>);
+
+  }
+
+  return (
+    <form className="mt-5" onSubmit={onSubmit} aria-label="Newsletter signup">
+      <label htmlFor="newsletter-email" className="text-xs text-white/50">
+        Join our newsletter
+      </label>
+      <div className="mt-2 flex overflow-hidden rounded-full border border-white/15 bg-white/5">
+        <input
+          id="newsletter-email"
+          type="email"
+          required
+          value={email}
+          onChange={(e) => {
+            setEmail(e.target.value);
+            if (status === "error") setStatus("idle");
+          }}
+          placeholder="Email address"
+          className="w-full bg-transparent px-4 py-2.5 text-sm text-white placeholder:text-white/40 focus:outline-none" />
+
+        <button
+          type="submit"
+          disabled={status === "loading"}
+          aria-label="Subscribe"
+          className="flex items-center justify-center bg-brand px-4 text-white transition-colors hover:bg-brand-dark disabled:opacity-60">
+
+          {status === "loading" ?
+          <Loader2 size={18} className="animate-spin" /> :
+          <ArrowRight size={18} />}
+        </button>
+      </div>
+      {status === "error" &&
+      <p className="mt-1.5 text-xs text-red-300">
+          Please enter a valid email address.
+        </p>
+      }
+    </form>);
 
 }
 

@@ -62,10 +62,19 @@ export function ProductCard({ product, removeFromWishlistOnAdd = false }) {
           }
         </Link>
 
-        {/* Badges */}
+        {/* Badges — use the admin-managed `badges` list, falling back to the
+            bestSeller/isNew flags for older records. */}
         <div className="pointer-events-none absolute left-3 top-3 flex flex-col gap-1.5">
-          {product.bestSeller && <Badge variant="brand">Best Seller</Badge>}
-          {product.isNew && <Badge variant="dark">New</Badge>}
+          {(Array.isArray(product.badges) && product.badges.length ?
+          product.badges :
+          [
+          ...(product.bestSeller ? ["Best Seller"] : []),
+          ...(product.isNew ? ["New"] : [])]).
+          map((b) =>
+          <Badge key={b} variant={b === "New" ? "dark" : "brand"}>
+              {b}
+            </Badge>
+          )}
           {discount > 0 && <Badge variant="gold">{discount}% Off</Badge>}
         </div>
 

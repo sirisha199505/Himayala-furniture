@@ -4,6 +4,7 @@ import * as React from "react";
 import { Check, Loader2, Send } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { whatsappLink } from "@/lib/store-config";
+import { createEnquiry } from "@/lib/api";
 
 const subjects = [
 "General Enquiry",
@@ -16,10 +17,23 @@ export function ContactForm({ whatsappHref }) {
   const [status, setStatus] = React.useState("idle");
   const waHref = whatsappHref || whatsappLink();
 
-  function onSubmit(e) {
+  async function onSubmit(e) {
     e.preventDefault();
+    const fd = new FormData(e.currentTarget);
     setStatus("loading");
-    setTimeout(() => setStatus("done"), 900); // demo submission
+    try {
+      await createEnquiry({
+        name: fd.get("name") || "",
+        phone: fd.get("phone") || "",
+        email: fd.get("email") || "",
+        message: fd.get("message") || "",
+        product: fd.get("subject") || "General Enquiry"
+      });
+    } catch (err) {
+      // Non-blocking: still confirm (the visitor can also reach us on WhatsApp).
+      console.error("Contact form submission failed:", err);
+    }
+    setStatus("done");
   }
 
   if (status === "done") {

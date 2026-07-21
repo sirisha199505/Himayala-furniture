@@ -46,7 +46,7 @@ export const useAdminAuth = create()(
 // Super Admin: everything. Admin: everything EXCEPT user management & settings.
 const ALL_MODULES = [
 "dashboard", "products", "categories", "gallery", "faqs", "blogs", "case-studies",
-"stories", "seo", "leads", "orders", "customers", "analytics", "inventory",
+"stories", "locations", "seo", "leads", "orders", "customers", "analytics", "inventory",
 "users", "settings"];
 
 export const ROLE_MODULES = {

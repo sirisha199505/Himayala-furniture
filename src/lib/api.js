@@ -146,6 +146,7 @@ export const ENTITIES = {
   categories: { path: "/categories" },
   gallery: { path: "/gallery" },
   faqs: { path: "/faqs" },
+  locations: { path: "/locations" },
   blogs: { path: "/blogs" },
   caseStudies: { path: "/case-studies" },
   stories: { path: "/stories" },
@@ -193,6 +194,14 @@ export async function removeEntity(key, id) {
   const e = entity(key);
   await request("DELETE", `${e.path}/${id}`);
   return true;
+}
+
+// --- public storefront enquiry (no auth) -----------------------------------
+// Creates a lead from an Enquire Now / Book Consultation / Contact submission
+// so it shows up under Admin → Leads.
+export async function createEnquiry(payload) {
+  const json = await request("POST", "/public/leads", { body: toSnake(payload) });
+  return toCamel(json.data);
 }
 
 // --- misc read-only endpoints ----------------------------------------------

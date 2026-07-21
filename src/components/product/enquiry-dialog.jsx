@@ -11,6 +11,7 @@ import {
 "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { whatsappLink } from "@/lib/site";
+import { createEnquiry } from "@/lib/api";
 
 export function EnquiryDialog({
   trigger,
@@ -22,11 +23,24 @@ export function EnquiryDialog({
     "idle"
   );
 
-  function onSubmit(e) {
+  async function onSubmit(e) {
     e.preventDefault();
+    const fd = new FormData(e.currentTarget);
     setStatus("loading");
-    // Demo: simulate submission. Wire to an API/CRM in production.
-    setTimeout(() => setStatus("done"), 900);
+    try {
+      await createEnquiry({
+        name: fd.get("name") || "",
+        phone: fd.get("phone") || "",
+        email: fd.get("email") || "",
+        message: fd.get("message") || "",
+        // Give staff context on what the enquiry is about.
+        product: productName || intent
+      });
+    } catch (err) {
+      // Non-blocking: still confirm to the visitor (they also get WhatsApp).
+      console.error("Enquiry submission failed:", err);
+    }
+    setStatus("done");
   }
 
   return (

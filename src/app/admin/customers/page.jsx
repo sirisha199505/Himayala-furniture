@@ -9,7 +9,8 @@ export default function AdminCustomers() {
       entity="customers"
       title="Customers"
       singular="Customer"
-      description="Your customer base at a glance."
+      description="Your customer base at a glance. Customers are added automatically from orders placed at checkout."
+      canCreate={false}
       columns={[
       { key: "name", label: "Customer" },
       { key: "email", label: "Email" },

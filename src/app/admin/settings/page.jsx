@@ -28,6 +28,7 @@ export default function AdminSettings() {
   const [saved, setSaved] = React.useState(false);
   const [error, setError] = React.useState("");
   const [saving, setSaving] = React.useState(false);
+  const [errors, setErrors] = React.useState({});
 
   React.useEffect(() => {
     if (!mounted) return;
@@ -44,10 +45,44 @@ export default function AdminSettings() {
 
   function set(name, v) {
     setValues((s) => ({ ...s, [name]: v }));
+    setErrors((e) => e[name] ? { ...e, [name]: undefined } : e);
+  }
+
+  // Mandatory store details + light format checks for optional contact fields.
+  function validate(v) {
+    const errs = {};
+    const req = { storeName: "Store Name", phone: "Phone", email: "Email", whatsapp: "WhatsApp Number" };
+    for (const [name, label] of Object.entries(req)) {
+      if (!String(v[name] ?? "").trim()) errs[name] = `${label} is required.`;
+    }
+    const email = String(v.email ?? "").trim();
+    if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      errs.email = "Enter a valid email address.";
+    }
+    for (const name of ["phone", "whatsapp"]) {
+      const val = String(v[name] ?? "").trim();
+      if (val && !/^[+\d][\d\s-]{6,}$/.test(val)) {
+        errs[name] = "Enter a valid phone number.";
+      }
+    }
+    for (const name of ["instagram", "facebook", "youtube"]) {
+      const val = String(v[name] ?? "").trim();
+      if (val && !/^https?:\/\//i.test(val)) {
+        errs[name] = "Must start with http:// or https://";
+      }
+    }
+    return errs;
   }
 
   async function onSubmit(e) {
     e.preventDefault();
+    const errs = validate(values);
+    if (Object.keys(errs).length > 0) {
+      setErrors(errs);
+      setError("Please fix the highlighted fields before saving.");
+      return;
+    }
+    setErrors({});
     setSaving(true);
     setError("");
     try {
@@ -76,23 +111,23 @@ export default function AdminSettings() {
 
       <form onSubmit={onSubmit} className="space-y-6">
         <Card title="Store Information">
-          <Field label="Store Name" name="storeName" values={values} onChange={set} />
-          <Field label="Tagline" name="tagline" values={values} onChange={set} />
-          <Field label="Phone" name="phone" values={values} onChange={set} />
-          <Field label="Email" name="email" type="email" values={values} onChange={set} />
-          <Field label="WhatsApp Number" name="whatsapp" values={values} onChange={set} />
+          <Field label="Store Name" name="storeName" required values={values} errors={errors} onChange={set} />
+          <Field label="Tagline" name="tagline" values={values} errors={errors} onChange={set} />
+          <Field label="Phone" name="phone" required values={values} errors={errors} onChange={set} />
+          <Field label="Email" name="email" type="email" required values={values} errors={errors} onChange={set} />
+          <Field label="WhatsApp Number" name="whatsapp" required values={values} errors={errors} onChange={set} />
         </Card>
 
         <Card title="Social Links">
-          <Field label="Instagram" name="instagram" values={values} onChange={set} />
-          <Field label="Facebook" name="facebook" values={values} onChange={set} />
-          <Field label="YouTube" name="youtube" values={values} onChange={set} />
+          <Field label="Instagram" name="instagram" values={values} errors={errors} onChange={set} />
+          <Field label="Facebook" name="facebook" values={values} errors={errors} onChange={set} />
+          <Field label="YouTube" name="youtube" values={values} errors={errors} onChange={set} />
         </Card>
 
         <Card title="Address">
-          <Field label="City" name="city" values={values} onChange={set} />
-          <Field label="State" name="state" values={values} onChange={set} />
-          <Field label="Business Hours" name="hours" values={values} onChange={set} />
+          <Field label="City" name="city" values={values} errors={errors} onChange={set} />
+          <Field label="State" name="state" values={values} errors={errors} onChange={set} />
+          <Field label="Business Hours" name="hours" values={values} errors={errors} onChange={set} />
         </Card>
 
         <div className="flex items-center gap-3">
@@ -119,16 +154,22 @@ function Card({ title, children }) {
 
 }
 
-function Field({ label, name, values, onChange, type = "text" }) {
+function Field({ label, name, values, onChange, type = "text", required, errors = {} }) {
+  const err = errors[name];
   return (
     <div>
-      <label className="mb-1.5 block text-sm font-medium text-charcoal">{label}</label>
+      <label className="mb-1.5 block text-sm font-medium text-charcoal">
+        {label} {required && <span className="text-brand">*</span>}
+      </label>
       <input
         type={type}
         value={values[name] ?? ""}
         onChange={(e) => onChange(name, e.target.value)}
-        className="w-full rounded-xl border border-border bg-ivory px-4 py-2.5 text-sm outline-none focus:border-brand" />
+        className={`w-full rounded-xl border bg-ivory px-4 py-2.5 text-sm outline-none focus:border-brand ${
+        err ? "border-brand" : "border-border"}`
+        } />
 
+      {err && <p className="mt-1 text-xs text-brand">{err}</p>}
     </div>);
 
 }
