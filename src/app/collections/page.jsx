@@ -2,7 +2,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
-import { collections } from "@/data/collections";
+import { getCollections } from "@/lib/catalog";
 import { Container } from "@/components/layout/container";
 import { PageHeader } from "@/components/layout/page-header";
 import { Reveal } from "@/components/motion/reveal";
@@ -16,7 +16,10 @@ export const metadata = pageMeta({
   path: "/collections"
 });
 
-export default function CollectionsPage() {
+export const revalidate = 30;
+
+export default async function CollectionsPage() {
+  const collections = await getCollections();
   return (
     <>
       <JsonLd

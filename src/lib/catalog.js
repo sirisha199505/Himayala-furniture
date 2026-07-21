@@ -19,6 +19,7 @@ import { stories as STATIC_STORIES } from "@/data/stories";
 import { galleryItems as STATIC_GALLERY } from "@/data/gallery";
 import { faqs as STATIC_FAQS } from "@/data/faqs";
 import { locations as STATIC_LOCATIONS } from "@/data/locations";
+import { collections as STATIC_COLLECTIONS } from "@/data/collections";
 
 const REVALIDATE = 30; // seconds — admin edits appear on the storefront within ~30s
 
@@ -97,6 +98,9 @@ export const getStory = (slug) => getBySlug("stories", slug, STATIC_STORIES);
 export const getGallery = () => fetchPublic("gallery", STATIC_GALLERY);
 export const getFaqs = () => fetchPublic("faqs", STATIC_FAQS);
 export const getLocations = () => fetchPublic("locations", STATIC_LOCATIONS);
+export const getCollections = () => fetchPublic("collections", STATIC_COLLECTIONS);
+export const getCollection = (slug) =>
+getBySlug("collections", slug, STATIC_COLLECTIONS);
 
 // --- Derived helpers (mirror the old module-level exports in products.js) ----
 export const bestSellersOf = (products) => products.filter((p) => p.bestSeller);

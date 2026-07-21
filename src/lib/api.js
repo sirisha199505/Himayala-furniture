@@ -147,6 +147,7 @@ export const ENTITIES = {
   gallery: { path: "/gallery" },
   faqs: { path: "/faqs" },
   locations: { path: "/locations" },
+  collections: { path: "/collections" },
   blogs: { path: "/blogs" },
   caseStudies: { path: "/case-studies" },
   stories: { path: "/stories" },

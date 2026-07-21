@@ -6,7 +6,7 @@ import { usePathname, useRouter } from "next/navigation";
 import {
   LayoutDashboard, Sofa, Tag, Images, HelpCircle, Newspaper, Briefcase,
   BookOpen, Search, Users, Settings, LogOut, Menu, X, Inbox, ShoppingCart,
-  UserRound, BarChart3, Boxes, ExternalLink, ShieldAlert, MapPin } from
+  UserRound, BarChart3, Boxes, ExternalLink, ShieldAlert, MapPin, Layers } from
 "lucide-react";
 import { cn } from "@/lib/utils";
 import { useAdminAuth, canAccess, ROLE_LABELS } from "@/store/admin-auth";
@@ -17,6 +17,7 @@ const NAV = [
 { module: "dashboard", label: "Dashboard", href: "/admin", icon: LayoutDashboard },
 { module: "products", label: "Products", href: "/admin/products", icon: Sofa },
 { module: "categories", label: "Categories", href: "/admin/categories", icon: Tag },
+{ module: "collections", label: "Collections", href: "/admin/collections", icon: Layers },
 { module: "gallery", label: "Gallery", href: "/admin/gallery", icon: Images },
 { module: "faqs", label: "FAQs", href: "/admin/faqs", icon: HelpCircle },
 { module: "blogs", label: "Blogs", href: "/admin/blogs", icon: Newspaper },
@@ -33,7 +34,7 @@ const NAV = [
 { module: "settings", label: "Settings", href: "/admin/settings", icon: Settings }];
 
 const GROUPS = [
-{ title: "Content", modules: ["dashboard", "products", "categories", "gallery", "faqs", "blogs", "case-studies", "stories", "locations", "seo"] },
+{ title: "Content", modules: ["dashboard", "products", "categories", "collections", "gallery", "faqs", "blogs", "case-studies", "stories", "locations", "seo"] },
 { title: "Commerce", modules: ["leads", "orders", "customers", "analytics", "inventory"] },
 { title: "Admin", modules: ["users", "settings"] }];
 

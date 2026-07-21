@@ -1,12 +1,13 @@
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
-import { collections } from "@/data/collections";
+import { getCollections } from "@/lib/catalog";
 import { Container } from "@/components/layout/container";
 import { SectionHeading } from "@/components/layout/section-heading";
 import { Reveal } from "@/components/motion/reveal";
 
-export function FeaturedCollections() {
+export async function FeaturedCollections() {
+  const collections = await getCollections();
   return (
     <section className="bg-beige/60 py-16 sm:py-20">
       <Container>

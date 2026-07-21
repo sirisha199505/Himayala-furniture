@@ -45,7 +45,7 @@ export const useAdminAuth = create()(
 // Modules available per role.
 // Super Admin: everything. Admin: everything EXCEPT user management & settings.
 const ALL_MODULES = [
-"dashboard", "products", "categories", "gallery", "faqs", "blogs", "case-studies",
+"dashboard", "products", "categories", "collections", "gallery", "faqs", "blogs", "case-studies",
 "stories", "locations", "seo", "leads", "orders", "customers", "analytics", "inventory",
 "users", "settings"];
 

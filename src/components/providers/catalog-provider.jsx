@@ -10,6 +10,7 @@ import * as React from "react";
 import { API_BASE, toCamel } from "@/lib/api";
 import { products as STATIC_PRODUCTS } from "@/data/products";
 import { categories as STATIC_CATEGORIES } from "@/data/categories";
+import { collections as STATIC_COLLECTIONS } from "@/data/collections";
 import {
   bestSellersOf,
   materialsOf,
@@ -34,17 +35,20 @@ async function loadPublic(path, fallback) {
 export function CatalogProvider({ children }) {
   const [products, setProducts] = React.useState(STATIC_PRODUCTS);
   const [categories, setCategories] = React.useState(STATIC_CATEGORIES);
+  const [collections, setCollections] = React.useState(STATIC_COLLECTIONS);
   const [loading, setLoading] = React.useState(true);
 
   React.useEffect(() => {
     let alive = true;
     Promise.all([
     loadPublic("products", STATIC_PRODUCTS),
-    loadPublic("categories", STATIC_CATEGORIES)]).
-    then(([p, c]) => {
+    loadPublic("categories", STATIC_CATEGORIES),
+    loadPublic("collections", STATIC_COLLECTIONS)]).
+    then(([p, c, col]) => {
       if (!alive) return;
       setProducts(p.map(normalizeProduct));
       setCategories(c);
+      setCollections(col);
     }).
     finally(() => alive && setLoading(false));
     return () => {
@@ -58,6 +62,7 @@ export function CatalogProvider({ children }) {
     return {
       products,
       categories,
+      collections,
       loading,
       productBySlug: (slug) => bySlug.get(slug),
       categoryBySlug: (slug) => catBySlug.get(slug),
@@ -66,7 +71,7 @@ export function CatalogProvider({ children }) {
       allColors: colorsOf(products),
       priceRange: priceRangeOf(products)
     };
-  }, [products, categories, loading]);
+  }, [products, categories, collections, loading]);
 
   return (
     <CatalogContext.Provider value={value}>{children}</CatalogContext.Provider>);
@@ -82,6 +87,7 @@ export function useCatalog() {
     return {
       products: STATIC_PRODUCTS,
       categories: STATIC_CATEGORIES,
+      collections: STATIC_COLLECTIONS,
       loading: false,
       productBySlug: (slug) => bySlug.get(slug),
       categoryBySlug: (slug) => catBySlug.get(slug),
