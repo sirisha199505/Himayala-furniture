@@ -13,7 +13,7 @@ export const metadata = pageMeta({
   path: "/gallery"
 });
 
-export const revalidate = 300;
+export const revalidate = 30;
 
 export default async function GalleryPage() {
   const galleryItems = await getGallery();

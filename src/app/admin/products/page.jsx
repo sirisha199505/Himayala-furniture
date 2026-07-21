@@ -44,7 +44,13 @@ export default function AdminProducts() {
       { name: "rating", label: "Rating (0–5)", type: "number", min: 0, max: 5, step: 0.1 },
       { name: "reviews", label: "Reviews", type: "number", min: 0, step: 1 },
       { name: "warranty", label: "Warranty", placeholder: "5-Year Warranty" },
-      { name: "image", label: "Image URL", type: "image", full: true },
+      {
+        name: "images",
+        label: "Product Images",
+        type: "gallery",
+        full: true,
+        hint: "Add multiple photos — e.g. different angles or a 2-person workstation. The first image is the cover."
+      },
       { name: "shortDescription", label: "Short Description", type: "textarea" },
       { name: "description", label: "Full Description", type: "textarea" },
       { name: "materials", label: "Materials (comma separated)", type: "tags", full: true },

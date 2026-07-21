@@ -14,6 +14,9 @@ export function ProductGallery({
   const [zoom, setZoom] = React.useState(false);
   const [pos, setPos] = React.useState({ x: 50, y: 50 });
 
+  const pics = Array.isArray(images) ? images.filter(Boolean) : [];
+  const current = pics[active] ?? pics[0];
+
   const onMove = (e) => {
     const r = e.currentTarget.getBoundingClientRect();
     setPos({
@@ -22,11 +25,23 @@ export function ProductGallery({
     });
   };
 
+  // Product with no images yet — show a graceful placeholder instead of
+  // crashing on <Image src={undefined}>.
+  if (pics.length === 0) {
+    return (
+      <div className="flex aspect-square items-center justify-center rounded-3xl bg-gradient-to-br from-beige to-brand-50 p-6 text-center">
+        <span className="font-display text-lg font-semibold text-warmbrown/70">
+          {name}
+        </span>
+      </div>);
+
+  }
+
   return (
     <div className="flex flex-col-reverse gap-4 sm:flex-row">
       {/* Thumbnails */}
       <div className="flex gap-3 sm:flex-col">
-        {images.map((src, i) =>
+        {pics.map((src, i) =>
         <button
           key={i}
           onMouseEnter={() => setActive(i)}
@@ -52,7 +67,7 @@ export function ProductGallery({
         onMouseMove={onMove}>
         
         <Image
-          src={images[active]}
+          src={current}
           alt={name}
           fill
           priority

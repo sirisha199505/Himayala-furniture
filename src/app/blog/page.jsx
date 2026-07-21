@@ -6,7 +6,7 @@ import { JsonLd } from "@/components/seo/json-ld";
 import { breadcrumbLd, pageMeta } from "@/lib/seo";
 import { getBlogs } from "@/lib/catalog";
 
-export const revalidate = 300;
+export const revalidate = 30;
 
 export const metadata = pageMeta({
   title: "Blog & Guides",

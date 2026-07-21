@@ -17,7 +17,7 @@ export const metadata = pageMeta({
   path: "/stories"
 });
 
-export const revalidate = 300;
+export const revalidate = 30;
 
 export default async function StoriesPage() {
   const stories = await getStories();

@@ -19,7 +19,7 @@ import { stories as STATIC_STORIES } from "@/data/stories";
 import { galleryItems as STATIC_GALLERY } from "@/data/gallery";
 import { faqs as STATIC_FAQS } from "@/data/faqs";
 
-const REVALIDATE = 300; // seconds — admin edits appear within ~5 min
+const REVALIDATE = 30; // seconds — admin edits appear on the storefront within ~30s
 
 async function fetchPublic(path, fallback) {
   try {
@@ -64,7 +64,14 @@ export async function getProducts() {
 
 export async function getProduct(slug) {
   const data = await fetchPublic(`products/slug/${encodeURIComponent(slug)}`, null);
-  return normalizeProduct(data || STATIC_PRODUCTS.find((p) => p.slug === slug) || null);
+  if (data) return normalizeProduct(data);
+  // The by-slug endpoint missed — fall back to the full list (covers timing /
+  // caching hiccups for freshly-added products) before the static catalogue.
+  const all = await getProducts();
+  const found =
+  all.find((p) => p.slug === slug) ||
+  STATIC_PRODUCTS.find((p) => p.slug === slug);
+  return found ? normalizeProduct(found) : null;
 }
 
 export async function getCategories() {

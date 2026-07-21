@@ -24,6 +24,7 @@ export function ProductCard({ product, removeFromWishlistOnAdd = false }) {
   const [added, setAdded] = React.useState(false);
   const wished = mounted && wishlist.has(product.slug);
   const compared = mounted && compare.has(product.slug);
+  const cover = product.images?.[0];
   const purchasable = product.price > 0 && product.inStock !== false;
   const discount =
   product.mrp && product.mrp > product.price ?
@@ -44,7 +45,7 @@ export function ProductCard({ product, removeFromWishlistOnAdd = false }) {
     <div className="group relative flex flex-col overflow-hidden rounded-2xl border border-border bg-surface transition-all duration-500 hover:-translate-y-1 hover:shadow-elevated">
       <div className="relative aspect-square overflow-hidden bg-beige sm:aspect-[4/5]">
         <Link href={`/products/${product.slug}`} aria-label={product.name}>
-          {imgError ?
+          {imgError || !cover ?
           <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-beige to-brand-50 p-4 text-center">
               <span className="font-display text-sm font-semibold text-warmbrown/70">
                 {product.name}
@@ -52,7 +53,7 @@ export function ProductCard({ product, removeFromWishlistOnAdd = false }) {
             </div> :
 
           <Image
-            src={product.images[0]}
+            src={cover}
             alt={product.name}
             fill
             sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"

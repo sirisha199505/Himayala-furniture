@@ -38,7 +38,7 @@ export async function generateStaticParams() {
 }
 
 export const dynamicParams = true;
-export const revalidate = 300;
+export const revalidate = 30;
 
 export async function generateMetadata({
   params
@@ -51,7 +51,7 @@ export async function generateMetadata({
     title: product.name,
     description: product.shortDescription,
     path: `/products/${product.slug}`,
-    image: product.images[0]
+    image: product.images?.[0]
   });
 }
 
@@ -106,7 +106,7 @@ export default async function ProductPage({
       </Container>
 
       <Container className="pb-16">
-        <ProductMediaProvider imageCount={product.images.length}>
+        <ProductMediaProvider imageCount={product.images?.length || 1}>
         <div className="grid grid-cols-1 gap-10 lg:grid-cols-2 lg:gap-14">
           {/* Gallery */}
           <div className="lg:sticky lg:top-28 lg:self-start">
@@ -176,15 +176,15 @@ export default async function ProductPage({
                 icon={<Ruler size={18} />}
                 label="Dimensions"
                 value={
-                product.dimensions.width ?
+                product.dimensions?.width ?
                 `${product.dimensions.width}×${product.dimensions.depth}×${product.dimensions.height} cm` :
                 "Made to order"
                 } />
-              
+
               <QuickSpec
                 icon={<ShieldCheck size={18} />}
                 label="Warranty"
-                value={product.warranty} />
+                value={product.warranty || "Standard warranty"} />
               
             </dl>
 
@@ -245,23 +245,25 @@ export default async function ProductPage({
               Specifications
             </h2>
             <dl className="mt-5 divide-y divide-border rounded-2xl border border-border bg-surface">
-              {product.specs.map((s) =>
+              {(product.specs ?? []).map((s) =>
               <div
                 key={s.label}
                 className="flex justify-between gap-4 px-5 py-3.5 text-sm">
-                
+
                   <dt className="text-muted">{s.label}</dt>
                   <dd className="text-right font-medium text-charcoal">
                     {s.value}
                   </dd>
                 </div>
               )}
+              {product.materials?.length > 0 &&
               <div className="flex justify-between gap-4 px-5 py-3.5 text-sm">
                 <dt className="text-muted">Materials</dt>
                 <dd className="text-right font-medium text-charcoal">
                   {product.materials.join(", ")}
                 </dd>
               </div>
+              }
               {product.weight &&
               <div className="flex justify-between gap-4 px-5 py-3.5 text-sm">
                   <dt className="text-muted">Weight</dt>

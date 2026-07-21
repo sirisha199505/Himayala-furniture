@@ -20,12 +20,18 @@ export default function AdminBlogs() {
       fields={[
       { name: "title", label: "Title", required: true, full: true },
       { name: "category", label: "Category", type: "select", options: blogCategories, required: true },
-      { name: "author", label: "Author" },
-      { name: "authorRole", label: "Author Role" },
-      { name: "date", label: "Date", placeholder: "2026-06-23" },
-      { name: "cover", label: "Cover Image URL", type: "image", full: true },
-      { name: "excerpt", label: "Excerpt", type: "textarea" },
-      { name: "content", label: "Content (Markdown)", type: "textarea", full: true },
+      { name: "author", label: "Author", required: true },
+      { name: "authorRole", label: "Author Role", placeholder: "e.g. Lead Interior Designer" },
+      { name: "date", label: "Date", required: true, placeholder: "2026-06-23", hint: "Publish date in YYYY-MM-DD format." },
+      { name: "cover", label: "Cover Image", type: "image", full: true, required: true },
+      {
+        name: "excerpt",
+        label: "Excerpt (short summary)",
+        type: "textarea",
+        required: true,
+        hint: "A 1–2 sentence summary shown on blog cards and previews (not the full article)."
+      },
+      { name: "content", label: "Content (Markdown)", type: "textarea", full: true, required: true },
       { name: "tags", label: "Tags (comma separated)", type: "tags", full: true }]
       } />);
 

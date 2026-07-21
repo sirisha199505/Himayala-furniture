@@ -10,6 +10,27 @@ export function Rating({
 }) {
   // Tolerate string values (e.g. a BigDecimal rating serialized from the DB).
   const rating = Number(value) || 0;
+  const reviewCount = Number(reviews) || 0;
+
+  // No ratings yet — show a clear message instead of a misleading "0.0".
+  if (rating <= 0 && reviewCount <= 0) {
+    return (
+      <div className={cn("flex items-center gap-1.5", className)}>
+        <div className="flex items-center">
+          {Array.from({ length: 5 }).map((_, i) =>
+          <Star
+            key={i}
+            width={size}
+            height={size}
+            className="fill-none text-charcoal/20" />
+
+          )}
+        </div>
+        <span className="text-sm text-muted">No ratings yet</span>
+      </div>);
+
+  }
+
   return (
     <div className={cn("flex items-center gap-1.5", className)}>
       <div className="flex items-center">
@@ -29,7 +50,7 @@ export function Rating({
       <span className="text-sm font-medium text-warmbrown">
         {rating.toFixed(1)}
         {reviews !== undefined &&
-        <span className="text-muted"> ({reviews})</span>
+        <span className="text-muted"> ({reviewCount})</span>
         }
       </span>
     </div>);
