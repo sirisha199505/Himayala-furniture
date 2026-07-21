@@ -35,7 +35,7 @@ export function Header({ config = DEFAULT_STORE_CONFIG }) {
   const wishCount = useWishlist((s) => s.items.length);
   const compareCount = useCompare((s) => s.items.length);
   const cartQty = useCart(cartCount);
-  const { categories } = useCatalog();
+  const { categories, collections } = useCatalog();
 
   React.useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 8);
