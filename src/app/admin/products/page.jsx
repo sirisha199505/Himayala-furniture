@@ -54,6 +54,13 @@ export default function AdminProducts() {
       { name: "shortDescription", label: "Short Description", type: "textarea" },
       { name: "description", label: "Full Description", type: "textarea" },
       { name: "materials", label: "Materials (comma separated)", type: "tags", full: true },
+      {
+        name: "colors",
+        label: "Available Finishes / Colours",
+        type: "colors",
+        full: true,
+        hint: "Add each colour option shoppers can pick on the product page."
+      },
       { name: "badges", label: "Badges (comma separated)", type: "tags", full: true }]
       } />);
 

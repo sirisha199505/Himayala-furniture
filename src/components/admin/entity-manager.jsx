@@ -227,6 +227,12 @@ function EntityForm({
         const arr = Array.isArray(raw) ? raw : raw ? [raw] : [];
         init[f.name] = arr.filter(Boolean);
       } else
+      if (f.type === "colors") {
+        // A list of finishes: [{ name, hex }, …].
+        init[f.name] = Array.isArray(raw) ?
+        raw.map((c) => ({ name: c?.name ?? "", hex: c?.hex ?? "#8a6d3b" })) :
+        [];
+      } else
       if (f.type === "boolean")
       init[f.name] = raw === true || raw === "true" || raw === "t" || raw === "Yes" || raw === 1;else
       if (f.type === "tags") init[f.name] = Array.isArray(raw) ? raw.join(", ") : raw ?? "";else
@@ -307,6 +313,10 @@ function EntityForm({
       out[f.name] = v === true;else
       if (f.type === "gallery")
       out[f.name] = (Array.isArray(v) ? v : []).filter(Boolean);else
+      if (f.type === "colors")
+      out[f.name] = (Array.isArray(v) ? v : []).
+      map((c) => ({ name: String(c?.name ?? "").trim(), hex: String(c?.hex ?? "").trim() })).
+      filter((c) => c.name);else
       if (f.type === "tags")
       out[f.name] = String(v ?? "").
       split(",").
@@ -381,6 +391,10 @@ function EntityForm({
                 </select> :
             f.type === "gallery" ?
             <GalleryField
+              value={Array.isArray(values[f.name]) ? values[f.name] : []}
+              onChange={(arr) => set(f.name, arr)} /> :
+            f.type === "colors" ?
+            <ColorsField
               value={Array.isArray(values[f.name]) ? values[f.name] : []}
               onChange={(arr) => set(f.name, arr)} /> :
             f.type === "image" ?
@@ -573,6 +587,67 @@ function GalleryField({ value = [], onChange }) {
           image is used as the cover.
         </p>
       </div>
+    </div>);
+
+}
+
+// Editor for a product's finishes: a list of { name, hex } swatches. Each row
+// pairs a colour picker (hex) with a label; both feed the storefront's
+// "Available Finishes" selector. Order matters — finish #1 highlights image #1.
+function ColorsField({ value = [], onChange }) {
+  function update(i, patch) {
+    onChange(value.map((c, idx) => idx === i ? { ...c, ...patch } : c));
+  }
+  function add() {
+    onChange([...value, { name: "", hex: "#8a6d3b" }]);
+  }
+  function removeAt(i) {
+    onChange(value.filter((_, idx) => idx !== i));
+  }
+
+  return (
+    <div className="space-y-2">
+      {value.map((c, i) =>
+      <div key={i} className="flex items-center gap-2">
+          <input
+          type="color"
+          value={c.hex || "#8a6d3b"}
+          onChange={(e) => update(i, { hex: e.target.value })}
+          aria-label="Finish colour"
+          className="h-10 w-12 shrink-0 cursor-pointer rounded-lg border border-border bg-ivory p-1" />
+
+          <input
+          type="text"
+          value={c.name ?? ""}
+          onChange={(e) => update(i, { name: e.target.value })}
+          placeholder="Finish name (e.g. Walnut)"
+          className="flex-1 rounded-xl border border-border bg-ivory px-4 py-2.5 text-sm outline-none focus:border-brand" />
+
+          <input
+          type="text"
+          value={c.hex ?? ""}
+          onChange={(e) => update(i, { hex: e.target.value })}
+          placeholder="#7a5c45"
+          className="w-28 rounded-xl border border-border bg-ivory px-3 py-2.5 text-sm outline-none focus:border-brand" />
+
+          <button
+          type="button"
+          onClick={() => removeAt(i)}
+          aria-label="Remove finish"
+          className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-charcoal/70 text-white hover:bg-brand">
+
+            <X size={14} />
+          </button>
+        </div>
+      )}
+      <Button type="button" variant="outline" onClick={add}>
+        <Plus size={16} /> Add finish
+      </Button>
+      <p className="mt-1 text-xs text-muted">
+        Each finish shows as a colour swatch on the product page. Tip: upload
+        product images in the same order as the finishes — selecting a finish
+        switches to the image at the same position.
+      </p>
     </div>);
 
 }
