@@ -18,7 +18,6 @@ export default function AdminCategories() {
       fields={[
       { name: "name", label: "Name", required: true },
       { name: "tagline", label: "Tagline", placeholder: "Sink into comfort" },
-      { name: "count", label: "Item Count", type: "number" },
       { name: "image", label: "Image URL", type: "image", full: true },
       { name: "description", label: "Description", type: "textarea" }]
       } />);

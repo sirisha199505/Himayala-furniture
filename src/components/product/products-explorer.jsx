@@ -33,6 +33,14 @@ export function ProductsExplorer() {
   const [visible, setVisible] = React.useState(PAGE_SIZE);
   const [drawerOpen, setDrawerOpen] = React.useState(false);
 
+  // Real per-category counts from the live catalogue — the stored `count` field
+  // is a hand-entered value that drifts out of sync, so we never trust it here.
+  const categoryCounts = React.useMemo(() => {
+    const m = {};
+    for (const p of products) m[p.category] = (m[p.category] || 0) + 1;
+    return m;
+  }, [products]);
+
   // Re-sync every filter with the URL whenever it changes. Navigating to
   // /products (e.g. "View all products") clears the query string, which resets
   // all filters and dropdowns back to their defaults.
@@ -121,11 +129,13 @@ export function ProductsExplorer() {
       </FilterGroup>
 
       <FilterGroup title="Category">
-        {categories.map((c) =>
+        {categories.
+      filter((c) => (categoryCounts[c.slug] ?? 0) > 0).
+      map((c) =>
       <CheckRow
         key={c.slug}
         label={c.name}
-        count={c.count}
+        count={categoryCounts[c.slug] ?? 0}
         checked={cats.includes(c.slug)}
         onChange={() => toggle(setCats)(c.slug)} />
 

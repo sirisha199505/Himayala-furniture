@@ -1,13 +1,18 @@
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
-import { getCategories } from "@/lib/catalog";
+import { getCategories, getProducts } from "@/lib/catalog";
 import { Container } from "@/components/layout/container";
 import { SectionHeading } from "@/components/layout/section-heading";
 import { Stagger, StaggerItem } from "@/components/motion/reveal";
 
 export async function CategoryGrid() {
-  const categories = await getCategories();
+  const [allCategories, products] = await Promise.all([getCategories(), getProducts()]);
+  // Count real products per category; the stored `count` field is unreliable.
+  const counts = {};
+  for (const p of products) counts[p.category] = (counts[p.category] || 0) + 1;
+  // Only surface categories that actually have products.
+  const categories = allCategories.filter((c) => (counts[c.slug] ?? 0) > 0);
   return (
     <section className="py-16 sm:py-20">
       <Container>
@@ -37,7 +42,7 @@ export async function CategoryGrid() {
                 <div className="absolute inset-0 gradient-overlay" />
                 <div className="absolute inset-x-0 bottom-0 p-4">
                   <p className="text-[0.65rem] font-semibold uppercase tracking-wider text-bronze">
-                    {cat.count > 0 ? `${cat.count} pieces` : "Made to order"}
+                    {counts[cat.slug] > 0 ? `${counts[cat.slug]} pieces` : "Made to order"}
                   </p>
                   <h3 className="mt-0.5 flex items-center justify-between font-display text-lg font-semibold text-white">
                     {cat.name}
