@@ -9,9 +9,12 @@ const ProductMediaContext = React.createContext(null);
 
 export function ProductMediaProvider({ imageCount = 1, children }) {
   const [active, setActive] = React.useState(0);
+  // A finish can point at its own photo that may not live in the gallery array;
+  // when set, the gallery shows this instead of images[active].
+  const [overrideSrc, setOverrideSrc] = React.useState(null);
   const value = React.useMemo(
-    () => ({ active, setActive, imageCount }),
-    [active, imageCount]
+    () => ({ active, setActive, imageCount, overrideSrc, setOverrideSrc }),
+    [active, imageCount, overrideSrc]
   );
   return (
     <ProductMediaContext.Provider value={value}>
@@ -25,6 +28,10 @@ export function ProductMediaProvider({ imageCount = 1, children }) {
 export function useProductMedia() {
   const ctx = React.useContext(ProductMediaContext);
   const [localActive, setLocalActive] = React.useState(0);
+  const [localOverride, setLocalOverride] = React.useState(null);
   if (ctx) return ctx;
-  return { active: localActive, setActive: setLocalActive, imageCount: 1 };
+  return {
+    active: localActive, setActive: setLocalActive, imageCount: 1,
+    overrideSrc: localOverride, setOverrideSrc: setLocalOverride
+  };
 }

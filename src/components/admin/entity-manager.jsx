@@ -228,9 +228,9 @@ function EntityForm({
         init[f.name] = arr.filter(Boolean);
       } else
       if (f.type === "colors") {
-        // A list of finishes: [{ name, hex }, …].
+        // A list of finishes: [{ name, hex, image? }, …].
         init[f.name] = Array.isArray(raw) ?
-        raw.map((c) => ({ name: c?.name ?? "", hex: c?.hex ?? "#8a6d3b" })) :
+        raw.map((c) => ({ name: c?.name ?? "", hex: c?.hex ?? "#8a6d3b", image: c?.image ?? "" })) :
         [];
       } else
       if (f.type === "boolean")
@@ -315,7 +315,12 @@ function EntityForm({
       out[f.name] = (Array.isArray(v) ? v : []).filter(Boolean);else
       if (f.type === "colors")
       out[f.name] = (Array.isArray(v) ? v : []).
-      map((c) => ({ name: String(c?.name ?? "").trim(), hex: String(c?.hex ?? "").trim() })).
+      map((c) => {
+        const o = { name: String(c?.name ?? "").trim(), hex: String(c?.hex ?? "").trim() };
+        const img = String(c?.image ?? "").trim();
+        if (img) o.image = img;
+        return o;
+      }).
       filter((c) => c.name);else
       if (f.type === "tags")
       out[f.name] = String(v ?? "").
@@ -599,54 +604,86 @@ function ColorsField({ value = [], onChange }) {
     onChange(value.map((c, idx) => idx === i ? { ...c, ...patch } : c));
   }
   function add() {
-    onChange([...value, { name: "", hex: "#8a6d3b" }]);
+    onChange([...value, { name: "", hex: "#8a6d3b", image: "" }]);
   }
   function removeAt(i) {
     onChange(value.filter((_, idx) => idx !== i));
   }
+  function onFile(i, e) {
+    const file = (e.target.files || [])[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = () => update(i, { image: String(reader.result) });
+    reader.readAsDataURL(file);
+    e.target.value = "";
+  }
 
   return (
-    <div className="space-y-2">
+    <div className="space-y-3">
       {value.map((c, i) =>
-      <div key={i} className="flex items-center gap-2">
-          <input
-          type="color"
-          value={c.hex || "#8a6d3b"}
-          onChange={(e) => update(i, { hex: e.target.value })}
-          aria-label="Finish colour"
-          className="h-10 w-12 shrink-0 cursor-pointer rounded-lg border border-border bg-ivory p-1" />
+      <div key={i} className="rounded-xl border border-border bg-ivory/60 p-3">
+          <div className="flex items-center gap-2">
+            <input
+            type="color"
+            value={c.hex || "#8a6d3b"}
+            onChange={(e) => update(i, { hex: e.target.value })}
+            aria-label="Finish colour"
+            className="h-10 w-12 shrink-0 cursor-pointer rounded-lg border border-border bg-ivory p-1" />
 
-          <input
-          type="text"
-          value={c.name ?? ""}
-          onChange={(e) => update(i, { name: e.target.value })}
-          placeholder="Finish name (e.g. Walnut)"
-          className="flex-1 rounded-xl border border-border bg-ivory px-4 py-2.5 text-sm outline-none focus:border-brand" />
+            <input
+            type="text"
+            value={c.name ?? ""}
+            onChange={(e) => update(i, { name: e.target.value })}
+            placeholder="Finish name (e.g. Walnut)"
+            className="flex-1 rounded-xl border border-border bg-ivory px-4 py-2.5 text-sm outline-none focus:border-brand" />
 
-          <input
-          type="text"
-          value={c.hex ?? ""}
-          onChange={(e) => update(i, { hex: e.target.value })}
-          placeholder="#7a5c45"
-          className="w-28 rounded-xl border border-border bg-ivory px-3 py-2.5 text-sm outline-none focus:border-brand" />
+            <input
+            type="text"
+            value={c.hex ?? ""}
+            onChange={(e) => update(i, { hex: e.target.value })}
+            placeholder="#7a5c45"
+            className="w-24 rounded-xl border border-border bg-ivory px-3 py-2.5 text-sm outline-none focus:border-brand" />
 
-          <button
-          type="button"
-          onClick={() => removeAt(i)}
-          aria-label="Remove finish"
-          className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-charcoal/70 text-white hover:bg-brand">
+            <button
+            type="button"
+            onClick={() => removeAt(i)}
+            aria-label="Remove finish"
+            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-charcoal/70 text-white hover:bg-brand">
 
-            <X size={14} />
-          </button>
+              <X size={14} />
+            </button>
+          </div>
+
+          <div className="mt-2 flex items-center gap-2">
+            {c.image ? <Thumb src={c.image} /> : null}
+            <input
+            type="text"
+            value={c.image ?? ""}
+            onChange={(e) => update(i, { image: e.target.value })}
+            placeholder="Image for this finish (URL, optional)"
+            className="flex-1 rounded-xl border border-border bg-ivory px-4 py-2 text-sm outline-none focus:border-brand" />
+
+            <label className="shrink-0 cursor-pointer rounded-xl border border-border bg-surface px-3 py-2 text-sm text-warmbrown hover:border-brand">
+              <Upload size={14} className="mr-1 inline" /> Upload
+              <input type="file" accept="image/*" onChange={(e) => onFile(i, e)} className="hidden" />
+            </label>
+            {c.image ?
+            <button
+              type="button"
+              onClick={() => update(i, { image: "" })}
+              className="shrink-0 text-xs text-muted hover:text-brand">
+              Clear
+            </button> : null}
+          </div>
         </div>
       )}
       <Button type="button" variant="outline" onClick={add}>
         <Plus size={16} /> Add finish
       </Button>
       <p className="mt-1 text-xs text-muted">
-        Each finish shows as a colour swatch on the product page. Tip: upload
-        product images in the same order as the finishes — selecting a finish
-        switches to the image at the same position.
+        Each finish shows as a colour swatch on the product page. Add an image
+        per finish so selecting that colour shows its matching photo. If a finish
+        has no image, it falls back to the gallery photo at the same position.
       </p>
     </div>);
 

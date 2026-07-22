@@ -6,19 +6,26 @@ import { cn } from "@/lib/utils";
 import { useProductMedia } from "@/components/product/product-media";
 
 export function FinishSelector({ colors = [] }) {
-  const { active, setActive, imageCount } = useProductMedia();
+  const { active, setActive, imageCount, setOverrideSrc } = useProductMedia();
   const [selected, setSelected] = React.useState(0);
 
   if (!colors.length) return null;
 
-  // Colours aren't mapped 1:1 to images in the catalogue, so map each finish to
-  // the gallery image at the same index (clamped) to give visual feedback.
+  // Prefer a finish's own photo when the admin has set one; otherwise fall back
+  // to mapping the finish to the gallery image at the same index (clamped).
   function choose(i) {
     setSelected(i);
-    setActive(Math.min(i, Math.max(0, imageCount - 1)));
+    const img = colors[i]?.image;
+    if (img) {
+      setOverrideSrc?.(img);
+    } else {
+      setOverrideSrc?.(null);
+      setActive(Math.min(i, Math.max(0, imageCount - 1)));
+    }
   }
 
-  // Keep the highlighted swatch in sync when the gallery image changes elsewhere.
+  // Keep the highlighted swatch in sync when the gallery image changes elsewhere
+  // (only when no finish is pinning its own override image).
   React.useEffect(() => {
     if (active < colors.length) setSelected(active);
   }, [active, colors.length]);

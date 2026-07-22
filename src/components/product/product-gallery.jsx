@@ -10,12 +10,14 @@ export function ProductGallery({
   name
 
 }) {
-  const { active, setActive } = useProductMedia();
+  const { active, setActive, overrideSrc, setOverrideSrc } = useProductMedia();
   const [zoom, setZoom] = React.useState(false);
   const [pos, setPos] = React.useState({ x: 50, y: 50 });
 
   const pics = Array.isArray(images) ? images.filter(Boolean) : [];
-  const current = pics[active] ?? pics[0];
+  // A selected finish can override the shown image; a thumbnail click clears it.
+  const current = overrideSrc ?? pics[active] ?? pics[0];
+  const selectThumb = (i) => {setOverrideSrc?.(null);setActive(i);};
 
   const onMove = (e) => {
     const r = e.currentTarget.getBoundingClientRect();
@@ -44,8 +46,8 @@ export function ProductGallery({
         {pics.map((src, i) =>
         <button
           key={i}
-          onMouseEnter={() => setActive(i)}
-          onClick={() => setActive(i)}
+          onMouseEnter={() => selectThumb(i)}
+          onClick={() => selectThumb(i)}
           aria-label={`View image ${i + 1}`}
           className={cn(
             "relative h-16 w-16 shrink-0 overflow-hidden rounded-xl border-2 transition-all sm:h-20 sm:w-20",
