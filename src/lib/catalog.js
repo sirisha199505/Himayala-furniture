@@ -23,13 +23,21 @@ import { collections as STATIC_COLLECTIONS } from "@/data/collections";
 
 const REVALIDATE = 30; // seconds — admin edits appear on the storefront within ~30s
 
-async function fetchPublic(path, fallback) {
+// How long to wait on the API before falling back to the static catalog.
+// Sized so a sleeping host (e.g. Render free tier) has time to cold-start
+// rather than us silently serving stale static data (which 404s new products).
+const DEFAULT_TIMEOUT = 15000;
+// Detail-by-slug lookups get extra headroom: here the fallback is a 404, so it's
+// worth waiting out a cold start rather than declaring a real product missing.
+const DETAIL_TIMEOUT = 25000;
+
+async function fetchPublic(path, fallback, { timeout = DEFAULT_TIMEOUT } = {}) {
   try {
     const res = await fetch(`${API_BASE}/public/${path}`, {
       next: { revalidate: REVALIDATE },
       // Fail fast (don't hang the build/render) if the API is slow/unreachable
       // — we fall back to the static catalog in that case.
-      signal: AbortSignal.timeout(8000)
+      signal: AbortSignal.timeout(timeout)
     });
     if (!res.ok) return fallback;
     const json = await res.json();
@@ -65,7 +73,9 @@ export async function getProducts() {
 }
 
 export async function getProduct(slug) {
-  const data = await fetchPublic(`products/slug/${encodeURIComponent(slug)}`, null);
+  const data = await fetchPublic(`products/slug/${encodeURIComponent(slug)}`, null, {
+    timeout: DETAIL_TIMEOUT
+  });
   if (data) return normalizeProduct(data);
   // The by-slug endpoint missed — fall back to the full list (covers timing /
   // caching hiccups for freshly-added products) before the static catalogue.
@@ -82,7 +92,9 @@ export async function getCategories() {
 
 // --- Editorial content ------------------------------------------------------
 async function getBySlug(list, slug, fallbackList) {
-  const data = await fetchPublic(`${list}/slug/${encodeURIComponent(slug)}`, null);
+  const data = await fetchPublic(`${list}/slug/${encodeURIComponent(slug)}`, null, {
+    timeout: DETAIL_TIMEOUT
+  });
   return data || fallbackList.find((x) => x.slug === slug) || null;
 }
 

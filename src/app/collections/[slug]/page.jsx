@@ -15,6 +15,7 @@ export function generateStaticParams() {
 
 export const dynamicParams = true;
 export const revalidate = 30;
+export const maxDuration = 30; // allow the API cold-start wait in catalog.js (Vercel default is 10s)
 
 export async function generateMetadata({
   params
